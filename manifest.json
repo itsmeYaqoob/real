@@ -1,0 +1,21 @@
+{
+  "name": "Gravity Glutes",
+  "short_name": "Glutes",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#333333",
+  "description": "A 9-exercise glute workout you can do at home.",
+  "icons": [
+    {
+      "src": "https://i.imgur.com/8QJb2c2.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.imgur.com/fQj9k6t.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

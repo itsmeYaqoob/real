@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gravity Glutes</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#333">
+    <link rel="apple-touch-icon" href="https://i.imgur.com/8QJb2c2.png">
+</head>
+<body>
+    <div id="app-container">
+        <header>
+            <h1 id="app-title">Gravity Glutes</h1>
+            <button id="reset-progress" title="Reset daily progress">Reset</button>
+        </header>
+        <main id="main-content">
+            <!-- Exercise list will be injected here by JS -->
+        </main>
+    </div>
+
+    <div id="exercise-modal" class="hidden">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <h2 id="modal-title">Exercise Title</h2>
+            <img id="modal-gif" src="" alt="Exercise animation">
+            <div class="details-grid">
+                <div><strong>Reps:</strong> <span id="modal-reps"></span></div>
+                <div><strong>Sets:</strong> <span id="modal-sets"></span></div>
+            </div>
+            <h3>Instructions:</h3>
+            <div id="modal-instructions"></div>
+            <div class="actions">
+                <button id="complete-exercise-btn">Complete</button>
+                <div id="rest-timer">
+                    <p>Rest: <span id="timer-display">90</span>s</p>
+                    <button id="start-timer-btn">Start Rest</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
