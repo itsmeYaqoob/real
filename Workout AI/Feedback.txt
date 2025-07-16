@@ -1,3 +1,5 @@
+Main URL: https://www.youtube.com/watch?v=YERyZEBA8u0
+
 Box alike swipe = previous / NEXT
 notepad for saving text = suggestions
 speech = simplified non ai
