@@ -1,0 +1,4 @@
+Box alike swipe = previous / NEXT
+notepad for saving text = suggestions
+speech = simplified non ai
+swipe through images + change? save-easy?
