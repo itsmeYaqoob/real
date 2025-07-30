@@ -3,7 +3,7 @@ from tkinter import simpledialog, messagebox
 import webbrowser
 
 # Example starting usernames
-usernames = ['Malik']
+usernames = ['yaqoob']
 
 # Variant generator
 def generate_variants(base):

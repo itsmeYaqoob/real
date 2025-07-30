@@ -13,7 +13,7 @@ def generate_variants(base, top_names):
     return [f"{base}_{name}" for name in top_names]
 
 def open_youtube(username):
-    url = f"https://www.idcrawl.com/u/@{username}"
+    url = f"https://www.youtube.com/@{username}"
     webbrowser.open_new_tab(url)
 
 def approve_variant(username, btn_frame):
