@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title id="pageTitle">Yaqoob Tools Hub</title>
+  <title>Real Tools</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -11,36 +11,6 @@
       font-family: 'Roboto', Arial, sans-serif;
       background: linear-gradient(135deg, #f8fafc, #e0e7ef 60%, #c7d2fe);
       min-height: 100vh;
-    }
-    .header-config {
-      background: #f3f4f6;
-      padding: 1.5rem 2rem 1.2rem 2rem;
-      border-bottom: 1px solid #e5e7eb;
-      box-shadow: 0 1px 4px #0001;
-      margin-bottom: 0.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-    }
-    .header-config label {
-      font-weight: bold;
-      color: #334155;
-      margin-right: 0.5rem;
-    }
-    .header-config input,
-    .header-config textarea {
-      font-size: 1.1rem;
-      padding: 4px 10px;
-      border-radius: 6px;
-      border: 1px solid #cbd5e1;
-      outline: none;
-      margin-left: 0.5rem;
-      min-width: 180px;
-    }
-    .header-config textarea {
-      min-height: 32px;
-      resize: vertical;
-      width: 98%;
     }
     .navbar {
       background: #1e293b;
@@ -131,34 +101,12 @@
         width: 95vw;
         margin-bottom: 1rem;
       }
-      .header-config input,
-      .header-config textarea {
-        min-width: 120px;
-        font-size: 1em;
-      }
     }
   </style>
 </head>
 <body>
-  <div class="header-config">
-    <div>
-      <label for="pageName">Page Name:</label>
-      <input type="text" id="pageName" value="Yaqoob Tools Hub" oninput="updatePageName()">
-    </div>
-    <div>
-      <label for="appName">App Name:</label>
-      <input type="text" id="appName" value="Yaqoob Tools Hub" oninput="updateAppName()">
-    </div>
-    <div>
-      <label for="visibleText">Visible Text:</label>
-      <textarea id="visibleText" rows="1" oninput="updateVisibleText()">Explore your personalized toolkit. All apps in one place!</textarea>
-    </div>
-    <div style="color:#64748b;font-size:0.97em; margin-top:0.5em;">
-      <span id="whoSeesText">Everyone visiting this page sees the above content.</span>
-    </div>
-  </div>
   <nav class="navbar">
-    <span class="brand" id="brandName">Yaqoob Tools Hub</span>
+    <span class="brand">Real tools.</span>
     <!-- Optionally add a profile/settings icon or link here -->
   </nav>
   <main>
@@ -174,40 +122,18 @@
       <div class="card" onclick="location.href='workout/'">
         <span class="card-icon">🏋️‍♂️</span>
         <div class="card-title">Gravity v2</div>
-        <div class="card-desc">Coming soon</div>
+        <div class="card-desc">COming Soon!</div>
         <a class="card-link" href="workout/">Open Tool</a>
       </div>
       <!-- Card 3 (example future app) -->
       <div class="card" onclick="location.href='bmi-calculator/'">
         <span class="card-icon">📊</span>
-        <div class="card-title">More+</div>
-        <div class="card-desc">On the way</div>
+        <div class="card-title">+More</div>
+        <div class="card-desc">COming ahead.</div>
         <a class="card-link" href="bmi-calculator/">Open Tool</a>
       </div>
       <!-- Add more cards as you build more tools -->
     </div>
-    <div style="text-align:center; margin:2.5rem 0 1.2rem 0;">
-      <span id="mainVisibleText" style="color:#475569;font-size:1.09em;">Explore your personalized toolkit. All apps in one place!</span>
-    </div>
   </main>
-  <script>
-    function updatePageName() {
-      var pageName = document.getElementById('pageName').value;
-      document.title = pageName;
-      document.getElementById('brandName').innerText = pageName;
-    }
-    function updateAppName() {
-      var appName = document.getElementById('appName').value;
-      document.getElementById('brandName').innerText = appName;
-    }
-    function updateVisibleText() {
-      var text = document.getElementById('visibleText').value;
-      document.getElementById('mainVisibleText').innerText = text;
-    }
-    // Initial load
-    updatePageName();
-    updateAppName();
-    updateVisibleText();
-  </script>
 </body>
 </html>
