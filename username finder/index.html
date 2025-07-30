@@ -5,34 +5,122 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Username Variant Finder</title>
   <style>
+    :root {
+      --primary: #2563eb;
+      --accent: #6366f1;
+      --bg: #f3f4f6;
+      --card-bg: #fff;
+      --input-bg: #f9fafb;
+      --border: #cbd5e1;
+      --row-bg: #f1f5f9;
+      --text: #1e293b;
+      --secondary: #64748b;
+      --danger: #ef4444;
+      --pin-bg: #e0e7ef;
+      --shadow: 0 4px 24px #64748b22;
+    }
+    [data-theme="dark"] {
+      --primary: #60a5fa;
+      --accent: #818cf8;
+      --bg: #18181b;
+      --card-bg: #23272f;
+      --input-bg: #1e293b;
+      --border: #334155;
+      --row-bg: #23272f;
+      --text: #f3f4f6;
+      --secondary: #94a3b8;
+      --danger: #ef4444;
+      --pin-bg: #334155;
+      --shadow: 0 4px 24px #000a;
+    }
+    html, body {
+      height: 100%;
+    }
     body {
+      background: var(--bg);
+      color: var(--text);
       font-family: 'Segoe UI', Arial, sans-serif;
-      background: #f5f6fa;
       margin: 0;
-      padding: 0;
+      min-height: 100vh;
+      transition: background 0.2s, color 0.2s;
     }
     .main-container {
-      max-width: 540px;
+      width: 80vw;
+      min-width: 320px;
+      max-width: 1020px;
       margin: 0 auto;
-      padding: 0 1rem;
+      padding: 0;
     }
     .header {
-      font-size: 1.45em;
+      font-size: 1.6em;
       font-weight: bold;
       margin-top: 2rem;
-      margin-bottom: 0.5em;
-      color: #1e293b;
+      margin-bottom: 0.4em;
+      color: var(--primary);
       text-align: center;
       letter-spacing: 1px;
     }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1em 0.5em;
+      background: var(--card-bg);
+      border-radius: 12px;
+      margin-bottom: 1em;
+      box-shadow: var(--shadow);
+    }
+    .save-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 0.7em 1.4em;
+      border-radius: 8px;
+      font-size: 1.05em;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.18s;
+      margin-right: 1em;
+    }
+    .save-btn:hover {
+      background: var(--accent);
+    }
+    .export-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 0.7em 1.1em;
+      border-radius: 8px;
+      font-size: 1.05em;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.18s;
+      margin-right: 1em;
+    }
+    .export-btn:hover {
+      background: var(--primary);
+    }
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.4em;
+      cursor: pointer;
+      padding: 0.5em 0.7em;
+      border-radius: 6px;
+      transition: background 0.16s;
+    }
+    .theme-toggle:hover {
+      background: var(--pin-bg);
+    }
     .prompt-box {
       margin: 2rem auto 1.3rem auto;
-      background: #fff;
-      border-radius: 14px;
-      box-shadow: 0 2px 16px #0a174d18;
-      padding: 1.2rem;
+      background: var(--card-bg);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 2rem 1.5rem;
       width: 100%;
-      max-width: 430px;
+      max-width: 100vw;
       display: flex;
       flex-direction: column;
       gap: 1.1rem;
@@ -42,82 +130,92 @@
       width: 100%;
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 1.2rem;
+      margin-bottom: 1.3rem;
+      justify-content: center;
     }
     .prompt-row label {
       font-weight: 500;
-      color: #334155;
-      font-size: 1.07em;
-      margin-right: 0.6em;
+      color: var(--primary);
+      font-size: 1.2em;
+      margin-right: 0.9em;
     }
     .prompt-row input {
-      font-size: 1.09em;
-      padding: 7px 13px;
-      border-radius: 8px;
-      border: 1px solid #cbd5e1;
-      width: 140px;
+      font-size: 1.18em;
+      padding: 11px 17px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--input-bg);
+      width: 340px;
       outline: none;
-    }
-    .prompt-row .tag-cell {
-      min-width: 86px;
-      background: #e2e8f0;
-      border-radius: 9px;
-      padding: 6px 10px;
-      font-size: 1.09em;
-      color: #475569;
-      border: 1px solid #cbd5e1;
-      margin-left: 0.5em;
-      margin-right: 0.5em;
-      outline: none;
+      color: var(--text);
       font-weight: 500;
-      box-sizing: border-box;
+      margin-right: 1em;
+      transition: border 0.15s;
+    }
+    .prompt-row input:focus {
+      border-color: var(--primary);
     }
     .prompt-textarea {
       width: 100%;
-      min-height: 56px;
-      font-size: 1.11em;
-      border-radius: 8px;
-      border: 1px solid #cbd5e1;
-      padding: 10px 13px;
+      min-height: 90px;
+      font-size: 1.15em;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 15px 17px;
       resize: vertical;
       outline: none;
-      background: #f8fafc;
-      color: #1e293b;
+      background: var(--input-bg);
+      color: var(--text);
+      font-weight: 500;
+      box-sizing: border-box;
+      transition: border 0.15s;
+      margin-bottom: 1em;
+    }
+    .prompt-textarea:focus {
+      border-color: var(--primary);
     }
     .variant-list {
       margin-top: 1.7rem;
       min-height: 36px;
       display: flex;
       flex-direction: column;
-      gap: 0.7rem;
+      gap: 1.1rem;
     }
     .variant-row {
-      background: #fff;
-      border-radius: 10px;
+      background: var(--row-bg);
+      border-radius: 12px;
       box-shadow: 0 1px 7px #0a174d11;
       display: flex;
       align-items: center;
-      padding: 0.7em 0.8em;
-      gap: 0.7em;
+      padding: 1em 1.2em;
+      gap: 0.8em;
       position: relative;
       transition: background 0.1s;
     }
     .variant-row.pinned {
-      background: linear-gradient(90deg, #e0e7ef 75%, #f3f4f6);
+      background: linear-gradient(90deg, var(--pin-bg) 75%, var(--row-bg));
+      box-shadow: 0 1px 14px #6366f120;
     }
     .variant-editable {
       flex: 1;
-      border: 1px solid #e2e8f0;
-      background: #f1f5f9;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
       border-radius: 8px;
-      padding: 6px 12px;
-      font-size: 1.06em;
-      color: #1e293b;
+      padding: 8px 15px;
+      font-size: 1.15em;
+      color: var(--text);
       outline: none;
-      transition: box-shadow 0.16s;
-      box-sizing: border-box;
+      font-weight: 500;
       min-width: 120px;
-      min-height: 1.8em;
+      min-height: 1.9em;
+      box-sizing: border-box;
+      margin-right: 1em;
+      transition: border 0.17s, background 0.12s;
+    }
+    .variant-editable:focus {
+      border-color: var(--accent);
+      background: var(--input-bg);
     }
     .variant-actions {
       display: flex;
@@ -129,72 +227,79 @@
       background: none;
       border: none;
       cursor: pointer;
-      font-size: 1.17em;
-      padding: 4px 7px;
-      color: #94a3b8;
-      transition: color 0.16s, filter 0.18s;
-      border-radius: 4px;
+      font-size: 1.23em;
+      padding: 6px 9px;
+      color: var(--secondary);
+      transition: color 0.16s, filter 0.18s, background 0.13s;
+      border-radius: 5px;
       margin-left: 2px;
       margin-right: 2px;
       outline: none;
       vertical-align: middle;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     .icon-btn:active, .icon-btn:focus {
-      color: #475569;
+      color: var(--primary);
       filter: brightness(1.15);
+      background: var(--pin-bg);
     }
     .icon-btn.pin {
       color: #a3a3a3;
-      font-size: 1em;
-      background: url('data:image/svg+xml;utf8,<svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="gray" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5l2 2l-7 7l-2-2l7-7z"/></svg>') no-repeat center;
-      width: 22px;
-      height: 22px;
-      background-size: 16px;
+      background: none;
+      font-size: 1.13em;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
+      box-shadow: none;
       border: none;
-      display: inline-block;
-      opacity: 0.7;
     }
     .icon-btn.pin.pinned {
-      opacity: 1;
-      box-shadow: 0 0 0 2px #6366f1;
-      background: url('data:image/svg+xml;utf8,<svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="blue" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5l2 2l-7 7l-2-2l7-7z"/></svg>') no-repeat center;
-      background-size: 16px;
+      color: var(--accent);
+      background: none;
+      font-weight: bold;
+      box-shadow: 0 0 0 2px var(--accent);
       border-radius: 50%;
     }
     .icon-btn.remove {
-      color: #e11d48;
+      color: var(--danger);
     }
     .icon-btn.url {
-      color: #2563eb;
-      font-size: 1.06em;
+      color: var(--primary);
+      font-size: 1.15em;
       font-weight: bold;
       margin-right: 2px;
     }
     .icon-btn.arrow {
-      font-size: 1em;
-      color: #475569;
+      font-size: 1.03em;
+      color: var(--primary);
       padding: 2px;
       margin-left: 0;
       margin-right: 0;
-      border-radius: 3px;
+      border-radius: 7px;
       border: none;
-      width: 22px;
-      height: 22px;
+      width: 28px;
+      height: 28px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: #e2e8f0;
+      background: var(--pin-bg);
       transition: background 0.13s;
     }
     .icon-btn.arrow:hover {
-      background: #cbd5e1;
+      background: var(--accent);
+      color: #fff;
+    }
+    @media (max-width: 900px) {
+      .main-container { width: 97vw; }
+      .prompt-row input { width: 94vw; min-width: 120px; }
     }
     @media (max-width: 600px) {
-      .main-container { max-width: 99vw; }
-      .header { font-size: 1.15em; margin-top: 1.3em; }
+      .main-container { width: 99vw; }
+      .header { font-size: 1.18em; margin-top: 1.3em; }
       .prompt-box { max-width: 99vw; }
-      .prompt-row input, .prompt-row .tag-cell { font-size: 1em; min-width: 90px; }
+      .prompt-row input, .variant-editable { font-size: 1em; min-width: 90px; }
       .prompt-textarea { font-size: 1em; }
     }
   </style>
@@ -203,15 +308,19 @@
   <div class="main-container">
     <div class="header">
       Username Variant Finder<br>
-      <span style="font-size:0.97em;font-weight:normal;color:#64748b;">
+      <span style="font-size:0.97em;font-weight:normal;color:var(--secondary);">
         Allowing you to put more usernames like in bulk form but it is all in one
       </span>
+    </div>
+    <div class="top-bar">
+      <button class="save-btn" onclick="saveToBrowser()">Save</button>
+      <button class="export-btn" onclick="exportTXT()">Export TXT</button>
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">&#9788;</button>
     </div>
     <div class="prompt-box">
       <div class="prompt-row">
         <label for="baseName">Base Username:</label>
         <input type="text" id="baseName" placeholder="YourName" value="YourName" autocomplete="off">
-        <span class="tag-cell" contenteditable="true" id="persistentTag" spellcheck="false" title="Persistent Tag (optional)">tag</span>
       </div>
       <textarea class="prompt-textarea" id="variantInput"
         placeholder="Paste one or many variants, usernames, or tags. 
@@ -222,16 +331,23 @@ Enter to submit all at once."
     <div class="variant-list" id="variantList"></div>
   </div>
   <script>
+    // Theme
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      if (current === "dark") {
+        document.documentElement.setAttribute('data-theme', '');
+        document.querySelector('.theme-toggle').innerHTML = "&#9788;";
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.querySelector('.theme-toggle').innerHTML = "&#9790;";
+      }
+    }
     // State
     let variants = [];
-    let pinnedIds = new Set();
-
     // Elements
     const baseNameInput = document.getElementById('baseName');
-    const persistentTagCell = document.getElementById('persistentTag');
     const variantInput = document.getElementById('variantInput');
     const variantListDiv = document.getElementById('variantList');
-
     // Helper
     function makeId() {
       return Date.now() + "_" + Math.random().toString(36).slice(2,8);
@@ -239,23 +355,18 @@ Enter to submit all at once."
     function getBase() {
       return baseNameInput.value.trim();
     }
-    function getTag() {
-      return persistentTagCell.innerText.trim();
-    }
-
     function addVariantsFromInput(str) {
       let arr = str.split('\n').map(x => x.trim()).filter(x => x);
       arr.forEach(v => {
         variants.push({
           id: makeId(),
           variant: v,
-          direction: "end", // end = base + tag + variant, start = variant + tag + base
+          direction: "end", // end = base + variant, start = variant + base
           pinned: false
         });
       });
       renderVariants();
     }
-
     function handleInputKey(e) {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
@@ -263,17 +374,10 @@ Enter to submit all at once."
         variantInput.value = "";
       }
     }
-
     variantInput.addEventListener('keydown', handleInputKey);
-
-    persistentTagCell.addEventListener('input', () => {
-      renderVariants();
-    });
-
     baseNameInput.addEventListener('input', () => {
       renderVariants();
     });
-
     function updateVariantWord(id, newWord) {
       const v = variants.find(x => x.id === id);
       if (v) {
@@ -281,18 +385,15 @@ Enter to submit all at once."
         renderVariants();
       }
     }
-
     function togglePin(id) {
       const v = variants.find(x => x.id === id);
       v.pinned = !v.pinned;
       renderVariants();
     }
-
     function removeVariant(id) {
       variants = variants.filter(x => x.id !== id);
       renderVariants();
     }
-
     function swapDirection(id) {
       const v = variants.find(x => x.id === id);
       if (v) {
@@ -300,21 +401,17 @@ Enter to submit all at once."
         renderVariants();
       }
     }
-
     function getUsername(v) {
       const base = getBase();
-      const tag = getTag();
       if (v.direction === "end") {
-        return [base, tag, v.variant].filter(Boolean).join('');
+        return base + v.variant;
       } else {
-        return [v.variant, tag, base].filter(Boolean).join('');
+        return v.variant + base;
       }
     }
-
     function getUrl(v) {
       return "https://www.idcrawl.com/u/" + encodeURIComponent(getUsername(v));
     }
-
     function renderVariants() {
       variantListDiv.innerHTML = '';
       let sorted = [...variants];
@@ -335,11 +432,9 @@ Enter to submit all at once."
         editable.setAttribute("aria-label", "Edit variant");
         editable.oninput = (e) => updateVariantWord(v.id, e.target.value);
         row.appendChild(editable);
-
         // Actions: arrows, pin, url, remove
         const actions = document.createElement('div');
         actions.className = "variant-actions";
-
         // left arrow (direction to start)
         const leftArrow = document.createElement('button');
         leftArrow.className = "icon-btn arrow";
@@ -347,7 +442,6 @@ Enter to submit all at once."
         leftArrow.innerHTML = "&#8592;";
         leftArrow.onclick = () => swapDirection(v.id);
         actions.appendChild(leftArrow);
-
         // right arrow (direction to end)
         const rightArrow = document.createElement('button');
         rightArrow.className = "icon-btn arrow";
@@ -355,14 +449,13 @@ Enter to submit all at once."
         rightArrow.innerHTML = "&#8594;";
         rightArrow.onclick = () => swapDirection(v.id);
         actions.appendChild(rightArrow);
-
         // pin icon
         const pinBtn = document.createElement('button');
         pinBtn.className = "icon-btn pin" + (v.pinned ? " pinned" : "");
         pinBtn.title = v.pinned ? "Unpin" : "Pin";
+        pinBtn.innerHTML = v.pinned ? "&#128394;" : "&#128395;"; // pencil (pinned) / pencil outline (unpinned)
         pinBtn.onclick = () => togglePin(v.id);
         actions.appendChild(pinBtn);
-
         // url icon
         const urlBtn = document.createElement('a');
         urlBtn.className = "icon-btn url";
@@ -372,7 +465,6 @@ Enter to submit all at once."
         urlBtn.href = getUrl(v);
         urlBtn.innerHTML = "&#128279;";
         actions.appendChild(urlBtn);
-
         // remove icon
         const removeBtn = document.createElement('button');
         removeBtn.className = "icon-btn remove";
@@ -380,13 +472,40 @@ Enter to submit all at once."
         removeBtn.innerHTML = "&#10006;";
         removeBtn.onclick = () => removeVariant(v.id);
         actions.appendChild(removeBtn);
-
         row.appendChild(actions);
         variantListDiv.appendChild(row);
       });
     }
-
+    // Save/Load
+    function saveToBrowser() {
+      localStorage.setItem('usernamesVariants', JSON.stringify({
+        base: getBase(),
+        variants
+      }));
+      alert('Variants saved locally!');
+    }
+    function loadFromBrowser() {
+      let saved = localStorage.getItem('usernamesVariants');
+      if (saved) {
+        let obj = JSON.parse(saved);
+        baseNameInput.value = obj.base || '';
+        variants = obj.variants || [];
+        renderVariants();
+      }
+    }
+    function exportTXT() {
+      let out = '';
+      variants.forEach(v => {
+        out += getUsername(v) + "\n";
+      });
+      const blob = new Blob([out], {type: "text/plain"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "usernames.txt";
+      a.click();
+    }
     // Initial render
+    loadFromBrowser();
     renderVariants();
   </script>
 </body>
