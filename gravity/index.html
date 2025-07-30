@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gravity Glutes - Fitness App</title>
+    <meta name="description" content="Gravity Glutes - Your ultimate fitness app for glute workouts and exercises">
+    <meta name="theme-color" content="#FF6B6B">
+    
+    <!-- PWA manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍑</text></svg>">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="app-title">
+                <span class="icon">🍑</span>
+                Gravity Glutes
+            </h1>
+            <p class="app-subtitle">Transform Your Glutes</p>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-tab="workouts">Workouts</button>
+            <button class="nav-tab" data-tab="timer">Timer</button>
+            <button class="nav-tab" data-tab="progress">Progress</button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Workouts Tab -->
+            <div class="tab-content active" id="workouts">
+                <div class="workout-grid">
+                    <div class="workout-card" data-exercise="squats">
+                        <div class="workout-icon">🏋️</div>
+                        <h3>Squats</h3>
+                        <p>3 sets × 15 reps</p>
+                        <div class="difficulty beginner">Beginner</div>
+                    </div>
+                    
+                    <div class="workout-card" data-exercise="lunges">
+                        <div class="workout-icon">🚶</div>
+                        <h3>Lunges</h3>
+                        <p>3 sets × 12 reps each leg</p>
+                        <div class="difficulty intermediate">Intermediate</div>
+                    </div>
+                    
+                    <div class="workout-card" data-exercise="hip-thrusts">
+                        <div class="workout-icon">⬆️</div>
+                        <h3>Hip Thrusts</h3>
+                        <p>4 sets × 20 reps</p>
+                        <div class="difficulty intermediate">Intermediate</div>
+                    </div>
+                    
+                    <div class="workout-card" data-exercise="glute-bridges">
+                        <div class="workout-icon">🌉</div>
+                        <h3>Glute Bridges</h3>
+                        <p>3 sets × 25 reps</p>
+                        <div class="difficulty beginner">Beginner</div>
+                    </div>
+                    
+                    <div class="workout-card" data-exercise="bulgarian-split-squats">
+                        <div class="workout-icon">🏃</div>
+                        <h3>Bulgarian Split Squats</h3>
+                        <p>3 sets × 10 reps each leg</p>
+                        <div class="difficulty advanced">Advanced</div>
+                    </div>
+                    
+                    <div class="workout-card" data-exercise="deadlifts">
+                        <div class="workout-icon">💪</div>
+                        <h3>Romanian Deadlifts</h3>
+                        <p>4 sets × 12 reps</p>
+                        <div class="difficulty advanced">Advanced</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timer Tab -->
+            <div class="tab-content" id="timer">
+                <div class="timer-container">
+                    <div class="timer-display">
+                        <div class="time" id="timeDisplay">00:30</div>
+                        <div class="timer-label">Rest Timer</div>
+                    </div>
+                    
+                    <div class="timer-controls">
+                        <button class="timer-btn" id="startTimer">Start</button>
+                        <button class="timer-btn" id="pauseTimer">Pause</button>
+                        <button class="timer-btn" id="resetTimer">Reset</button>
+                    </div>
+                    
+                    <div class="timer-presets">
+                        <button class="preset-btn" data-time="30">30s</button>
+                        <button class="preset-btn" data-time="60">1m</button>
+                        <button class="preset-btn" data-time="90">1.5m</button>
+                        <button class="preset-btn" data-time="120">2m</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Tab -->
+            <div class="tab-content" id="progress">
+                <div class="progress-container">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalWorkouts">0</div>
+                            <div class="stat-label">Total Workouts</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="currentStreak">0</div>
+                            <div class="stat-label">Day Streak</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalTime">0</div>
+                            <div class="stat-label">Minutes Trained</div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-chart">
+                        <h3>Weekly Progress</h3>
+                        <div class="chart-container">
+                            <div class="chart-bars">
+                                <div class="chart-bar" data-day="Mon" style="height: 20%"></div>
+                                <div class="chart-bar" data-day="Tue" style="height: 40%"></div>
+                                <div class="chart-bar" data-day="Wed" style="height: 60%"></div>
+                                <div class="chart-bar" data-day="Thu" style="height: 30%"></div>
+                                <div class="chart-bar" data-day="Fri" style="height: 80%"></div>
+                                <div class="chart-bar" data-day="Sat" style="height: 50%"></div>
+                                <div class="chart-bar" data-day="Sun" style="height: 70%"></div>
+                            </div>
+                            <div class="chart-labels">
+                                <span>Mon</span>
+                                <span>Tue</span>
+                                <span>Wed</span>
+                                <span>Thu</span>
+                                <span>Fri</span>
+                                <span>Sat</span>
+                                <span>Sun</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Floating Action Button -->
+        <button class="fab" id="startWorkout">
+            <span class="fab-icon">▶️</span>
+        </button>
+    </div>
+
+    <!-- Workout Modal -->
+    <div class="modal" id="workoutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Exercise</h2>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="exercise-info">
+                    <div class="exercise-icon" id="modalIcon">🏋️</div>
+                    <div class="exercise-details">
+                        <h3 id="modalExercise">Exercise Name</h3>
+                        <p id="modalDescription">Exercise description and instructions</p>
+                        <div class="exercise-stats">
+                            <span class="stat">Sets: <strong id="modalSets">3</strong></span>
+                            <span class="stat">Reps: <strong id="modalReps">15</strong></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-primary" id="startExercise">Start Exercise</button>
+                    <button class="btn btn-secondary" id="markComplete">Mark Complete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(registration => console.log('SW registered'))
+                .catch(error => console.log('SW registration failed'));
+        }
+    </script>
+</body>
+</html>
