@@ -1,1 +1,139 @@
-<a href="gravity v1/"Gravity v1</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Yaqoob Tools Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      background: linear-gradient(135deg, #f8fafc, #e0e7ef 60%, #c7d2fe);
+      min-height: 100vh;
+    }
+    .navbar {
+      background: #1e293b;
+      color: #fff;
+      padding: 1rem 2rem;
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+      box-shadow: 0 2px 8px #0001;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .navbar .brand {
+      font-weight: bold;
+      font-size: 1.7rem;
+    }
+    .container {
+      max-width: 900px;
+      margin: 3rem auto 0 auto;
+      padding: 0 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+    }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 6px 24px #64748b30;
+      width: 220px;
+      text-align: center;
+      padding: 2rem 1.2rem 1.5rem 1.2rem;
+      transition: transform 0.15s, box-shadow 0.15s;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .card:hover {
+      transform: translateY(-5px) scale(1.04);
+      box-shadow: 0 10px 32px #64748b40;
+      background: linear-gradient(135deg, #e0e7ef 80%, #f8fafc);
+    }
+    .card-icon {
+      font-size: 2.8rem;
+      display: block;
+      margin-bottom: 1.2rem;
+      color: #6366f1;
+      transition: color 0.2s;
+    }
+    .card:hover .card-icon {
+      color: #1e293b;
+    }
+    .card-title {
+      font-size: 1.12rem;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 0.7rem;
+      letter-spacing: 0.5px;
+    }
+    .card-desc {
+      color: #64748b;
+      font-size: 0.98rem;
+      margin-bottom: 1.2rem;
+      min-height: 42px;
+    }
+    .card-link {
+      display: block;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      background: #6366f1;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1rem;
+      margin: 0 auto;
+      width: fit-content;
+      transition: background 0.18s;
+    }
+    .card-link:hover {
+      background: #1e293b;
+    }
+    @media (max-width: 700px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+      }
+      .card {
+        width: 95vw;
+        margin-bottom: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <span class="brand">Yaqoob Tools Hub</span>
+    <!-- Optionally add a profile/settings icon or link here -->
+  </nav>
+  <main>
+    <div class="container">
+      <!-- Card 1 -->
+      <div class="card" onclick="location.href='gravity v1/'">
+        <span class="card-icon">🪐</span>
+        <div class="card-title">Gravity v1</div>
+        <div class="card-desc">Physics calculator & simulation toolkit.</div>
+        <a class="card-link" href="gravity v1/">Open Tool</a>
+      </div>
+      <!-- Card 2 -->
+      <div class="card" onclick="location.href='workout/'">
+        <span class="card-icon">🏋️‍♂️</span>
+        <div class="card-title">Workout App</div>
+        <div class="card-desc">Customizable workout planner & tracker.</div>
+        <a class="card-link" href="workout/">Open Tool</a>
+      </div>
+      <!-- Card 3 (example future app) -->
+      <div class="card" onclick="location.href='bmi-calculator/'">
+        <span class="card-icon">📊</span>
+        <div class="card-title">BMI Calculator</div>
+        <div class="card-desc">Track weight, goals, and progress.</div>
+        <a class="card-link" href="bmi-calculator/">Open Tool</a>
+      </div>
+      <!-- Add more cards as you build more tools -->
+    </div>
+  </main>
+</body>
+</html>
