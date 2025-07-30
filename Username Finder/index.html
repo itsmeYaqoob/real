@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Username Variant Checker</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f5f6fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 540px;
+            margin: 30px auto;
+            padding: 22px;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            border-radius: 12px;
+        }
+        h1 {
+            font-size: 1.3em;
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        .input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+        .input-row input,
+        .input-row textarea {
+            font-size: 1em;
+            padding: 7px 10px;
+            border: 1px solid #bbb;
+            border-radius: 6px;
+            outline: none;
+        }
+        .input-row textarea {
+            min-width: 180px;
+            min-height: 34px;
+            resize: vertical;
+        }
+        .input-row button {
+            padding: 7px 16px;
+            background: #4078c0;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .input-row button:hover {
+            background: #2d5ca7;
+        }
+        .variant-list {
+            margin-top: 8px;
+            min-height: 32px;
+        }
+        .variant-row {
+            display: flex;
+            align-items: center;
+            background: #f7f9fc;
+            border-radius: 8px;
+            margin-bottom: 7px;
+            padding: 8px 10px;
+            gap: 7px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            transition: box-shadow 0.15s;
+            cursor: grab;
+        }
+        .variant-row.dragging {
+            background: #e7eaf0;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.09);
+        }
+        .variant-user {
+            font-weight: 500;
+            flex: 1;
+            word-break: break-all;
+        }
+        .variant-url {
+            color: #4078c0;
+            text-decoration: underline;
+            margin-right: 4px;
+            white-space: nowrap;
+        }
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+            padding: 3px 7px;
+            transition: color 0.18s;
+        }
+        .icon-btn.fav {
+            color: #e1b303;
+        }
+        .icon-btn.pin {
+            color: #4078c0;
+        }
+        .icon-btn.remove {
+            color: #d00;
+        }
+        .icon-btn.edit {
+            color: #555;
+        }
+        .icon-btn:hover {
+            filter: brightness(1.2);
+        }
+        .export-row {
+            margin-top: 22px;
+            text-align: right;
+        }
+        @media (max-width: 600px) {
+            .container { max-width: 98vw; }
+            h1 { font-size: 1em; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Username Variant Checker</h1>
+    <div class="input-row">
+        <input type="text" id="baseName" placeholder="Your base username" style="width:130px;">
+        <input type="text" id="singleVariant" placeholder="Add variant/tag">
+        <button onclick="addSingleVariant()">Add Tag</button>
+        <textarea id="bulkVariants" placeholder="Paste bulk tags or usernames (one per line)" style="width:170px;"></textarea>
+        <button onclick="addBulkVariants()">Bulk Add</button>
+        <button onclick="addCustomVariant()">Custom</button>
+    </div>
+    <div class="variant-list" id="variantList"></div>
+    <div class="export-row">
+        <button onclick="exportTXT()">Export TXT</button>
+    </div>
+</div>
+<script>
+let variants = [];
+let favorites = new Set();
+let pins = new Set();
+let draggingIndex = null;
+
+function renderVariants() {
+    const baseName = document.getElementById('baseName').value.trim();
+    const listDiv = document.getElementById('variantList');
+    listDiv.innerHTML = "";
+
+    // Sort: pins first, then favorites, then rest
+    let sorted = variants.slice();
+    sorted.sort((a, b) => {
+        if (pins.has(a.id) && !pins.has(b.id)) return -1;
+        if (!pins.has(a.id) && pins.has(b.id)) return 1;
+        if (favorites.has(a.id) && !favorites.has(b.id)) return -1;
+        if (!favorites.has(a.id) && favorites.has(b.id)) return 1;
+        return a.order - b.order;
+    });
+
+    sorted.forEach((variant, idx) => {
+        let username = "";
+        if (variant.mode === "front") username = variant.value + baseName;
+        else if (variant.mode === "back") username = baseName + variant.value;
+        else if (variant.mode === "custom") username = variant.value;
+        else username = baseName;
+
+        const url = `https://www.idcrawl.com/u/${encodeURIComponent(username)}`;
+
+        const row = document.createElement('div');
+        row.className = "variant-row";
+        row.draggable = true;
+        row.ondragstart = () => { draggingIndex = variant.id; row.classList.add("dragging"); };
+        row.ondragend = () => { draggingIndex = null; row.classList.remove("dragging"); };
+        row.ondragover = (e) => { e.preventDefault(); };
+        row.ondrop = (e) => { e.preventDefault(); moveVariant(draggingIndex, variant.id); };
+
+        if (pins.has(variant.id)) {
+            row.innerHTML += `<button class="icon-btn pin" onclick="togglePin(${variant.id})" title="Unpin">&#128204;</button>`;
+        } else {
+            row.innerHTML += `<button class="icon-btn" onclick="togglePin(${variant.id})" title="Pin">&#128204;</button>`;
+        }
+
+        if (favorites.has(variant.id)) {
+            row.innerHTML += `<button class="icon-btn fav" onclick="toggleFav(${variant.id})" title="Unfavorite">&#9733;</button>`;
+        } else {
+            row.innerHTML += `<button class="icon-btn" onclick="toggleFav(${variant.id})" title="Favorite">&#9734;</button>`;
+        }
+
+        row.innerHTML += `<span class="variant-user">${username}</span>`;
+        row.innerHTML += `<a class="variant-url" href="${url}" target="_blank" rel="noopener">Check</a>`;
+        row.innerHTML += `<button class="icon-btn edit" onclick="editVariant(${variant.id})" title="Edit">&#9998;</button>`;
+        row.innerHTML += `<button class="icon-btn remove" onclick="removeVariant(${variant.id})" title="Remove">&#10006;</button>`;
+
+        listDiv.appendChild(row);
+    });
+}
+
+function addSingleVariant() {
+    const val = document.getElementById('singleVariant').value.trim();
+    if (!val) return;
+    variants.push({value: val, mode: "front", id: Date.now() + Math.random(), order: variants.length});
+    document.getElementById('singleVariant').value = "";
+    renderVariants();
+}
+
+function addBulkVariants() {
+    const bulk = document.getElementById('bulkVariants').value.trim();
+    if (!bulk) return;
+    const arr = bulk.split('\n').map(x => x.trim()).filter(x => x);
+    arr.forEach(val => {
+        variants.push({value: val, mode: "front", id: Date.now() + Math.random(), order: variants.length});
+    });
+    document.getElementById('bulkVariants').value = "";
+    renderVariants();
+}
+
+function addCustomVariant() {
+    const baseName = document.getElementById('baseName').value.trim();
+    let val = prompt("Enter custom username variant:", baseName);
+    if (val && val.trim()) {
+        variants.push({value: val.trim(), mode: "custom", id: Date.now() + Math.random(), order: variants.length});
+        renderVariants();
+    }
+}
+
+function editVariant(id) {
+    const v = variants.find(x => x.id === id);
+    if (!v) return;
+    let newVal = prompt("Edit variant value:", v.value);
+    if (newVal && newVal.trim()) {
+        v.value = newVal.trim();
+        renderVariants();
+    }
+}
+
+function removeVariant(id) {
+    variants = variants.filter(x => x.id !== id);
+    favorites.delete(id);
+    pins.delete(id);
+    renderVariants();
+}
+
+function toggleFav(id) {
+    if (favorites.has(id)) favorites.delete(id);
+    else favorites.add(id);
+    renderVariants();
+}
+
+function togglePin(id) {
+    if (pins.has(id)) pins.delete(id);
+    else pins.add(id);
+    renderVariants();
+}
+
+function moveVariant(fromId, toId) {
+    const fromIdx = variants.findIndex(x => x.id === fromId);
+    const toIdx = variants.findIndex(x => x.id === toId);
+    if (fromIdx < 0 || toIdx < 0 || fromIdx === toIdx) return;
+    const moving = variants.splice(fromIdx, 1)[0];
+    variants.splice(toIdx, 0, moving);
+    // Update order numbers
+    variants.forEach((v, i) => v.order = i);
+    renderVariants();
+}
+
+function exportTXT() {
+    const baseName = document.getElementById('baseName').value.trim();
+    let out = "";
+    variants.forEach(variant => {
+        let username = "";
+        if (variant.mode === "front") username = variant.value + baseName;
+        else if (variant.mode === "back") username = baseName + variant.value;
+        else if (variant.mode === "custom") username = variant.value;
+        else username = baseName;
+        out += username + "\n";
+    });
+    const blob = new Blob([out], {type: "text/plain"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "usernames.txt";
+    a.click();
+}
+
+document.getElementById('baseName').addEventListener('input', renderVariants);
+
+renderVariants();
+</script>
+</body>
+</html>
