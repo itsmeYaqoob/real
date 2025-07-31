@@ -27,14 +27,43 @@
       font-weight: bold;
       font-size: 1.7rem;
     }
+    .navbar .view-toggle-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .view-toggle-btn {
+      background: #fff;
+      color: #334155;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 0.3rem 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      box-shadow: 0 1px 5px #0002;
+    }
+    .view-toggle-btn.active, .view-toggle-btn:hover {
+      background: #6366f1;
+      color: #fff;
+    }
     .container {
       max-width: 900px;
       margin: 3rem auto 0 auto;
       padding: 0 1rem;
+      min-height: 60vh;
+      /* Default grid view */
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 2rem;
+      transition: all 0.3s;
+    }
+    .container.list-view {
+      /* List view: stack cards vertically */
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1rem;
     }
     .card {
       background: #fff;
@@ -46,7 +75,16 @@
       transition: transform 0.15s, box-shadow 0.15s;
       position: relative;
       overflow: hidden;
-      cursor: pointer;
+      cursor: grab;
+      user-select: none;
+      touch-action: manipulation;
+    }
+    .container.list-view .card {
+      width: 97%;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      padding: 1.2rem 1rem;
     }
     .card:hover {
       transform: translateY(-5px) scale(1.04);
@@ -60,6 +98,10 @@
       color: #6366f1;
       transition: color 0.2s;
     }
+    .container.list-view .card-icon {
+      margin-bottom: 0;
+      margin-right: 1.2rem;
+    }
     .card:hover .card-icon {
       color: #1e293b;
     }
@@ -70,11 +112,18 @@
       margin-bottom: 0.7rem;
       letter-spacing: 0.5px;
     }
+    .container.list-view .card-title {
+      margin-bottom: 0.3rem;
+    }
     .card-desc {
       color: #64748b;
       font-size: 0.98rem;
       margin-bottom: 1.2rem;
       min-height: 42px;
+    }
+    .container.list-view .card-desc {
+      margin-bottom: 0;
+      min-height: unset;
     }
     .card-link {
       display: block;
@@ -92,48 +141,145 @@
     .card-link:hover {
       background: #1e293b;
     }
+    .container.list-view .card-link {
+      margin: 0 0 0 auto;
+      width: 130px;
+      text-align: center;
+    }
     @media (max-width: 700px) {
       .container {
         flex-direction: column;
         align-items: center;
       }
-      .card {
+      .card, .container.list-view .card {
         width: 95vw;
         margin-bottom: 1rem;
       }
+    }
+    /* Drag placeholder */
+    .card.dragging {
+      opacity: 0.35;
+      background: #c7d2fe;
+      box-shadow: 0 0 0 2px #6366f1;
+    }
+    .card.drag-over {
+      border: 2px dashed #6366f1;
     }
   </style>
 </head>
 <body>
   <nav class="navbar">
     <span class="brand">Real tools.</span>
-    <!-- Optionally add a profile/settings icon or link here -->
+    <div class="view-toggle-group">
+      <button class="view-toggle-btn active" id="gridViewBtn">Grid</button>
+      <button class="view-toggle-btn" id="listViewBtn">List</button>
+    </div>
   </nav>
   <main>
-    <div class="container">
-      <!-- Card 1 -->
-      <div class="card" onclick="location.href='gravity v1/'">
-        <span class="card-icon">🪐</span>
-        <div class="card-title">Gravity v1</div>
-        <div class="card-desc">Gravity Workout</div>
-        <a class="card-link" href="gravity v1/">Open Tool</a>
-      </div>
-      <!-- Card 2 -->
-      <div class="card" onclick="location.href='workout/'">
-        <span class="card-icon">🏋️‍♂️</span>
-        <div class="card-title">Test here</div>
-        <div class="card-desc">Live!</div>
-        <a class="card-link" href="Testing?/">Open Tool</a>
-      </div>
-      <!-- Card 3 (example future app) -->
-      <div class="card" onclick="location.href='bmi-calculator/'">
-        <span class="card-icon">📊</span>
-        <div class="card-title">Username FInder</div>
-        <div class="card-desc">@username researcher.</div>
-        <a class="card-link" href="username finder/">Open Tool</a>
-      </div>
-      <!-- Add more cards as you build more tools -->
+    <div class="container" id="cardsContainer">
+      <!-- Cards will be rendered by JS -->
     </div>
   </main>
+  <script>
+    // Card data (could be loaded from JSON or backend)
+    let cards = [
+      {
+        icon: "🪐",
+        title: "Gravity v1",
+        desc: "Gravity Workout",
+        url: "gravity v1/"
+      },
+      {
+        icon: "🏋️‍♂️",
+        title: "Test here",
+        desc: "Live!",
+        url: "Testing?/"
+      },
+      {
+        icon: "📊",
+        title: "Username FInder",
+        desc: "@username researcher.",
+        url: "username finder/"
+      }
+    ];
+
+    const container = document.getElementById('cardsContainer');
+    function renderCards() {
+      container.innerHTML = "";
+      cards.forEach((card, idx) => {
+        const cardDiv = document.createElement('div');
+        cardDiv.className = "card";
+        cardDiv.setAttribute("draggable", "true");
+        cardDiv.setAttribute("data-idx", idx);
+
+        // Drag events
+        cardDiv.addEventListener("dragstart", (e) => {
+          cardDiv.classList.add("dragging");
+          e.dataTransfer.setData("text/plain", idx);
+        });
+        cardDiv.addEventListener("dragend", () => {
+          cardDiv.classList.remove("dragging");
+        });
+        cardDiv.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          cardDiv.classList.add("drag-over");
+        });
+        cardDiv.addEventListener("dragleave", () => {
+          cardDiv.classList.remove("drag-over");
+        });
+        cardDiv.addEventListener("drop", (e) => {
+          e.preventDefault();
+          cardDiv.classList.remove("drag-over");
+          const fromIdx = parseInt(e.dataTransfer.getData("text/plain"), 10);
+          const toIdx = parseInt(cardDiv.getAttribute("data-idx"), 10);
+          if (fromIdx === toIdx) return;
+          // Rearrange
+          const moved = cards.splice(fromIdx, 1)[0];
+          cards.splice(toIdx, 0, moved);
+          renderCards();
+        });
+
+        // Card content
+        const iconSpan = document.createElement("span");
+        iconSpan.className = "card-icon";
+        iconSpan.textContent = card.icon;
+        cardDiv.appendChild(iconSpan);
+
+        const titleDiv = document.createElement("div");
+        titleDiv.className = "card-title";
+        titleDiv.textContent = card.title;
+        cardDiv.appendChild(titleDiv);
+
+        const descDiv = document.createElement("div");
+        descDiv.className = "card-desc";
+        descDiv.textContent = card.desc;
+        cardDiv.appendChild(descDiv);
+
+        const linkA = document.createElement("a");
+        linkA.className = "card-link";
+        linkA.href = card.url;
+        linkA.textContent = "Open Tool";
+        linkA.setAttribute("tabindex", "0");
+        cardDiv.appendChild(linkA);
+
+        container.appendChild(cardDiv);
+      });
+    }
+
+    // View toggle
+    document.getElementById('gridViewBtn').onclick = function() {
+      container.classList.remove("list-view");
+      this.classList.add("active");
+      document.getElementById('listViewBtn').classList.remove("active");
+    };
+    document.getElementById('listViewBtn').onclick = function() {
+      container.classList.add("list-view");
+      this.classList.add("active");
+      document.getElementById('gridViewBtn').classList.remove("active");
+    };
+
+    // Initial render
+    renderCards();
+  </script>
 </body>
 </html>
