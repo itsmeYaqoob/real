@@ -3,17 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Real~ Editor</title>
+  <title>Real~</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
       font-family: 'Roboto', Arial, sans-serif;
       background: linear-gradient(135deg, #f8fafc, #e0e7ef 60%, #c7d2fe);
-      min-height: 100vh;
-      user-select: none;
-      display: flex;
-      flex-direction: column;
       min-height: 100vh;
     }
     .navbar {
@@ -26,158 +22,76 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: relative;
+      cursor: pointer;
     }
-    .brand {
+    .navbar .brand {
       font-weight: bold;
       font-size: 1.7rem;
-      display: flex;
-      align-items: center;
-      gap: 0.9rem;
-    }
-    .logo {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: #6366f1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2.2rem;
-      margin-right: 0.3rem;
       cursor: pointer;
-      transition: box-shadow 0.18s;
-      box-shadow: 0 2px 8px #6366f180;
-    }
-    .logo.active {
-      box-shadow: 0 0 0 4px #6366f130;
-      outline: 2px solid #6366f1;
-    }
-    .export-settings-btn {
-      background: #fff;
-      color: #6366f1;
-      border: none;
-      padding: 0.27rem 0.8rem;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 0.89rem;
-      cursor: pointer;
-      box-shadow: 0 2px 8px #6366f120;
-      transition: background 0.18s, color 0.18s;
-      margin-left: 0;
-      margin-right: 0.2rem;
-      position: absolute;
-      right: 2.2rem;
-      top: 1.2rem;
-      z-index: 9;
-    }
-    .export-settings-btn:hover {
-      background: #6366f1;
-      color: #fff;
     }
     .container {
-      max-width: 900px;
+      width: 100%;
       margin: 3rem auto 0 auto;
       padding: 0 1rem;
       display: flex;
-      flex-direction: column;
-      gap: var(--gap,2rem);
-      flex: 1 1 auto;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      align-items: flex-start;
     }
-    .row {
-      display: flex;
-      gap: var(--gap,2rem);
-      margin-bottom: 2rem;
-      width: 100%;
-      flex-wrap: nowrap;
+    @media (max-width: 1100px) {
+      .container {
+        gap: 1rem;
+      }
     }
-    .section-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0.5rem;
-      margin-left: 2px;
+    @media (max-width: 700px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+      .card, .add-card {
+        width: 95vw !important;
+        margin-bottom: 1rem;
+      }
+      .editor-box {
+        width: 90vw;
+        min-width: unset;
+      }
+      .editor-search-box {
+        width: 90vw;
+      }
+      .card-size-slider-wrap {
+        width: 90vw;
+      }
     }
-    .section-title {
-      font-size: 1.08rem;
-      color: #6366f1;
-      font-weight: bold;
-      letter-spacing: 1px;
-      margin: 0;
-    }
-    .search-box {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-left: auto;
-    }
-    .search-box input[type="text"] {
-      padding: 0.26rem 0.8rem;
-      border-radius: 7px;
-      border: 1px solid #cbd5e1;
-      font-size: 1rem;
-      background: #f8fafc;
-      color: #334155;
-      width: 150px;
-      transition: border 0.2s;
-    }
-    .search-box input[type="text"]:focus {
-      border: 1.5px solid #6366f1;
-      outline: none;
-    }
-    .card, .add-card {
+    .card {
       background: #fff;
       border-radius: 16px;
       box-shadow: 0 6px 24px #64748b30;
-      width: 220px;
+      width: var(--card-size, 220px);
       text-align: center;
       padding: 2rem 1.2rem 1.5rem 1.2rem;
-      transition: transform 0.15s, box-shadow 0.15s;
+      transition: transform 0.15s, box-shadow 0.15s, width 0.2s, height 0.2s;
       position: relative;
       overflow: hidden;
       cursor: pointer;
       user-select: none;
-      flex: 1 1 220px;
-      max-width: 220px;
-      min-width: 150px;
-    }
-    .add-card {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #6366f1;
-      font-size: 2.8rem;
-      border: 2px dashed #6366f1;
-      background: #f8fafc;
-      min-height: 160px;
+      min-height: 215px;
+      box-sizing: border-box;
+      flex: 0 0 auto;
     }
     .card:hover {
       transform: translateY(-5px) scale(1.04);
       box-shadow: 0 10px 32px #64748b40;
       background: linear-gradient(135deg, #e0e7ef 80%, #f8fafc);
     }
-    .card.selected {
-      outline: 3px solid #6366f1;
-    }
-    .star-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: transparent;
-      border: none;
-      font-size: 1.6rem;
-      cursor: pointer;
-      color: #f59e42;
-      z-index: 3;
-    }
-    .star-btn.inactive { color: #d1d5db; }
     .card-icon {
       font-size: 2.8rem;
       display: block;
       margin-bottom: 1.2rem;
       color: #6366f1;
       transition: color 0.2s;
-      cursor: pointer;
     }
     .card:hover .card-icon {
       color: #1e293b;
@@ -188,16 +102,12 @@
       color: #334155;
       margin-bottom: 0.7rem;
       letter-spacing: 0.5px;
-      cursor: pointer;
-      word-break: break-word;
     }
     .card-desc {
       color: #64748b;
       font-size: 0.98rem;
       margin-bottom: 1.2rem;
       min-height: 42px;
-      cursor: pointer;
-      word-break: break-word;
     }
     .card-link {
       display: block;
@@ -211,530 +121,502 @@
       margin: 0 auto;
       width: fit-content;
       transition: background 0.18s;
-      cursor: pointer;
     }
     .card-link:hover {
       background: #1e293b;
     }
-    .edit-panel {
-      position: fixed;
-      top: 70px;
-      right: 24px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 16px #64748b40;
-      padding: 1.5rem;
-      z-index: 100;
-      min-width: 260px;
-      display: none;
-      flex-direction: column;
-      gap: 1rem;
-      font-size: 1rem;
-    }
-    .edit-panel label {
-      font-weight: 600;
-      margin-bottom: 0.1rem;
-      color: #334155;
-    }
-    .edit-panel input, .edit-panel textarea, .edit-panel select {
-      width: 100%;
-      padding: 0.4rem 0.6rem;
-      border-radius: 8px;
-      border: 1px solid #cbd5e1;
-      margin-bottom: 0.6rem;
-      font-size: 1rem;
-      background: #f8fafc;
-    }
-    .edit-panel .btn-row {
-      display: flex;
-      gap: 0.8rem;
-      justify-content: flex-end;
-    }
-    .edit-panel button {
-      padding: 0.5rem 1.1rem;
-      border-radius: 8px;
+    .star-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: none;
       border: none;
-      font-weight: 600;
+      font-size: 1.5rem;
       cursor: pointer;
-      background: #6366f1;
-      color: #fff;
-      transition: background 0.18s;
+      z-index: 2;
+      color: #ffd700;
+      opacity: 0.7;
+      transition: opacity 0.2s;
     }
-    .edit-panel button:hover {
-      background: #1e293b;
+    .star-btn.active {
+      opacity: 1;
+      color: #facc15;
     }
-    .edit-panel .delete-btn {
-      background: #f87171;
+    .card.dragging {
+      opacity: 0.5;
+      border: 2px dashed #6366f1;
     }
-    .edit-panel .delete-btn:hover {
-      background: #dc2626;
-    }
-    .gap-control {
-      margin-right: 1rem;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px #64748b20;
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-    }
-    .gap-control input {
-      width: 60px;
-      padding: 0.2rem 0.5rem;
-    }
-    .footer {
-      background: transparent;
-      text-align: center;
-      padding: 2rem 0 1.5rem 0;
-      width: 100%;
+    .editor-modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #0006;
       display: flex;
       align-items: center;
       justify-content: center;
+      z-index: 9999;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .editor-modal.active {
+      visibility: visible;
+      opacity: 1;
+    }
+    .editor-box {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 6px 24px #64748b80;
+      padding: 2rem;
+      min-width: 320px;
+      max-width: 90vw;
+      width: 400px;
+      display: flex;
       flex-direction: column;
-      margin-top: auto;
+      align-items: stretch;
+      gap: 1rem;
       position: relative;
     }
-    .footer-bottom {
-      width: 100%;
-      background: transparent;
-      text-align: center;
-      position: relative;
-      bottom: 0;
-      left: 0;
-      padding: 0.8rem 0 0.6rem 0;
+    .editor-box label {
+      font-size: 1rem;
+      color: #334155;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
     }
-    .export-html-btn {
-      background: #e5e7eb;
-      color: #6366f1;
-      border: none;
-      padding: 0.27rem 0.8rem;
+    .editor-box input, .editor-box textarea {
+      font-size: 1.1rem;
+      padding: 0.4rem 0.6rem;
       border-radius: 8px;
-      font-weight: 600;
-      font-size: 0.89rem;
-      cursor: pointer;
-      box-shadow: 0 2px 8px #6366f120;
-      transition: background 0.18s, color 0.18s;
-      margin: 0 auto;
-      display: inline-block;
+      border: 1px solid #cbd5e1;
+      margin-bottom: 0.5rem;
+      background: #f1f5f9;
     }
-    .export-html-btn:hover {
+    .editor-box textarea {
+      resize: vertical;
+      min-height: 40px;
+      max-height: 120px;
+    }
+    .editor-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 0.5rem;
+    }
+    .editor-actions button {
+      padding: 0.4rem 1rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
       background: #6366f1;
       color: #fff;
+      font-weight: 500;
+      transition: background 0.18s;
     }
-    @media (max-width: 900px) {
-      .container {
-        max-width: 100vw;
-        padding: 0 0.4rem;
-      }
-      .card, .add-card {
-        width: 48vw !important;
-        min-width: 150px;
-        max-width: 220px;
-      }
-      .search-box input[type="text"] {
-        width: 100px;
-      }
-      .export-settings-btn {
-        right: 0.7rem;
-      }
+    .editor-actions .delete-btn {
+      background: #ef4444;
     }
-    @media (max-width: 700px) {
-      .container {
-        flex-direction: column;
-        align-items: center;
-      }
-      .row {
-        flex-direction: column !important;
-      }
-      .card, .add-card {
-        width: 95vw !important;
-        margin-bottom: 1rem;
-        max-width: none;
-      }
-      .search-box input[type="text"] {
-        width: 90px;
-      }
-      .section-bar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.9rem;
-      }
-      .export-settings-btn {
-        top: 0.6rem;
-        right: 0.5rem;
-      }
+    .editor-actions .close-btn {
+      background: #64748b;
+    }
+    .editor-actions .save-btn {
+      background: #22c55e;
+    }
+    .export-actions {
+      margin: 1rem 0;
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+    }
+    .export-actions button {
+      background: #334155;
+      color: #fff;
+      border: none;
+      padding: 0.4rem 1rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.18s;
+    }
+    .editor-search-box {
+      margin: 0 auto 1rem auto;
+      width: 340px;
+      font-size: 1.3rem;
+      padding: 0.7rem 1.1rem;
+      border-radius: 12px;
+      border: 1.8px solid #6366f1;
+      background: #f1f5f9;
+      color: #334155;
+      display: block;
+      box-sizing: border-box;
+    }
+    .add-card {
+      background: #f1f5f9;
+      border: 2px dashed #6366f1;
+      color: #6366f1;
+      border-radius: 16px;
+      width: var(--card-size, 220px);
+      height: 215px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.8rem;
+      cursor: pointer;
+      transition: background 0.18s, width 0.2s, height 0.2s;
+      margin-bottom: 10px;
+      user-select: none;
+      min-height: 215px;
+      box-sizing: border-box;
+      flex: 0 0 auto;
+    }
+    .add-card:hover {
+      background: #c7d2fe;
+    }
+    .card-size-slider-wrap {
+      width: 350px;
+      margin: 0 auto 1.2rem auto;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      justify-content: center;
+    }
+    .card-size-slider-label {
+      color: #334155;
+      font-size: 1.07rem;
+      font-weight: 500;
+    }
+    .card-size-slider {
+      width: 150px;
+      accent-color: #6366f1;
+      height: 2.2em;
     }
   </style>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="brand">
-      <span class="logo" id="siteLogo">🌐</span> Real~
-    </div>
-    <button class="export-settings-btn" id="exportSettingsBtn">Export Settings</button>
-    <div class="gap-control" id="gapControl" style="display:none;">
-      <label for="gapRange">Spacing:</label>
-      <input type="range" id="gapRange" min="0" max="64" value="32">
-      <span id="gapValue">32px</span>
-    </div>
+  <nav class="navbar" id="navbar">
+    <span class="brand" id="brand-logo">Real~</span>
   </nav>
   <main>
-    <div class="container" id="cardContainer"></div>
+    <div class="export-actions">
+      <button id="importSettingsBtn">Import</button>
+      <button id="exportSettingsBtn">Export</button>
+      <button id="exportHtmlBtn">Export HTML</button>
+      <input type="file" id="importFileInput" accept=".json" style="display:none;">
+    </div>
+    <input type="text" id="editorSearchBox" class="editor-search-box" placeholder="Search apps...">
+    <div class="card-size-slider-wrap">
+      <span class="card-size-slider-label">App size</span>
+      <input type="range" id="cardSizeSlider" class="card-size-slider" min="160" max="320" step="10" value="220">
+      <button id="resetCardSizeBtn" title="Reset card size" style="font-size:1.1rem;padding:0.2rem 0.7rem;border-radius:8px;border:none;background:#f1f5f9;color:#6366f1;cursor:pointer;">⟳</button>
+    </div>
+    <div class="container" id="cardsContainer"></div>
   </main>
-  <footer class="footer">
-    <div class="footer-bottom">
-      <button class="export-html-btn" id="exportHtmlBtn">Export HTML</button>
-    </div>
-  </footer>
-  <div class="edit-panel" id="editPanel">
-    <label>Icon (Emoji or SVG):</label>
-    <input type="text" id="editIcon" maxlength="2" placeholder="e.g. 🪐">
-    <label>Name:</label>
-    <input type="text" id="editName" maxlength="32" placeholder="Card Title">
-    <label>Description:</label>
-    <textarea id="editDesc" rows="2" maxlength="120" placeholder="Description"></textarea>
-    <label>Link:</label>
-    <input type="text" id="editLink" placeholder="URL or path">
-    <div class="btn-row">
-      <button id="saveCardBtn">Save</button>
-      <button id="deleteCardBtn" class="delete-btn">Delete</button>
-      <button id="closePanelBtn">Close</button>
-    </div>
-    <div style="color: #f87171; font-size:0.99rem; display:none;" id="editError"></div>
+  <!-- Editor Modal -->
+  <div class="editor-modal" id="editorModal">
+    <form class="editor-box" id="editorForm" onsubmit="return false;">
+      <label>
+        Emoji
+        <input type="text" id="emojiInput" maxlength="2" required>
+      </label>
+      <label>
+        Name/Title
+        <input type="text" id="titleInput" maxlength="32" required>
+      </label>
+      <label>
+        Description
+        <textarea id="descInput" maxlength="120" required></textarea>
+      </label>
+      <label>
+        Link
+        <input type="text" id="linkInput" maxlength="128" required>
+      </label>
+      <div class="editor-actions">
+        <button type="button" class="save-btn" id="saveAppBtn">Save</button>
+        <button type="button" class="delete-btn" id="deleteAppBtn">Delete</button>
+        <button type="button" class="close-btn" id="closeEditorBtn">Close</button>
+      </div>
+    </form>
   </div>
   <script>
-    let cards = [
-      {icon:'🪐', name:'Gravity v1', desc:'Gravity Workout', link:'gravity v1/', starred:false},
-      {icon:'🏋️‍♂️', name:'Test here', desc:'Live!', link:'workout/', starred:false},
-      {icon:'📊', name:'Username Finder', desc:'@username researcher.', link:'username finder/', starred:false},
+    const defaultApps = [
+      {
+        "emoji": "📊",
+        "title": "Username Find?",
+        "desc": "@username researcher.",
+        "link": "username finder/",
+        "starred": true
+      },
+      {
+        "emoji": "🏋️‍♂️",
+        "title": "Gravity v1",
+        "desc": "Gravity Workout",
+        "link": "gravity v1/",
+        "starred": true
+      },
+      {
+        "emoji": "🪐",
+        "title": "Test here",
+        "desc": "Live!",
+        "link": "Testing?/",
+        "starred": false
+      },
+      {
+        "emoji": "🛠",
+        "title": "ha?",
+        "desc": "",
+        "link": "#",
+        "starred": false
+      }
     ];
-    let editMode = false;
-    let selectedCardIdx = null;
-    let dragSrcIdx = null;
-    let dragOverIdx = null;
-    let addingNewIdx = null;
-    let dragType = null;
+    let apps = JSON.parse(localStorage.getItem('apps')) || defaultApps.slice();
+    let editorMode = false;
+    let editingIdx = null;
+    let isNewApp = false;
     let searchValue = "";
+    let cardSize = 220; // Default card size
 
-    function isDuplicateUrl(url, idx) {
-      url = url.trim();
-      return cards.some((card, i)=>i!==idx && card.link.trim()===url);
-    }
-    function cardIsValid(card, idx) {
-      if(!card.icon.trim() || !card.name.trim() || !card.desc.trim() || !card.link.trim()) return false;
-      if(isDuplicateUrl(card.link, idx)) return false;
-      return true;
-    }
-    function splitCards() {
-      const pinned = [], unpinned = [];
-      cards.forEach((card, idx) => {
-        if (card.starred) pinned.push({...card, idx});
-        else unpinned.push({...card, idx});
-      });
-      return { pinned, unpinned };
-    }
-    function filterCards(cardsArray) {
-      if(!searchValue.trim()) return cardsArray;
-      const s = searchValue.toLowerCase();
-      return cardsArray.filter(card =>
-        card.name.toLowerCase().includes(s) ||
-        card.desc.toLowerCase().includes(s) ||
-        card.link.toLowerCase().includes(s)
+    const cardsContainer = document.getElementById('cardsContainer');
+    const editorModal = document.getElementById('editorModal');
+    const emojiInput = document.getElementById('emojiInput');
+    const titleInput = document.getElementById('titleInput');
+    const descInput = document.getElementById('descInput');
+    const linkInput = document.getElementById('linkInput');
+    const saveAppBtn = document.getElementById('saveAppBtn');
+    const deleteAppBtn = document.getElementById('deleteAppBtn');
+    const closeEditorBtn = document.getElementById('closeEditorBtn');
+    const brandLogo = document.getElementById('brand-logo');
+    const exportSettingsBtn = document.getElementById('exportSettingsBtn');
+    const exportHtmlBtn = document.getElementById('exportHtmlBtn');
+    const importSettingsBtn = document.getElementById('importSettingsBtn');
+    const importFileInput = document.getElementById('importFileInput');
+    const editorSearchBox = document.getElementById('editorSearchBox');
+    const cardSizeSlider = document.getElementById('cardSizeSlider');
+    const resetCardSizeBtn = document.getElementById('resetCardSizeBtn');
+
+    // Import functionality
+    importSettingsBtn.addEventListener('click', () => {
+      importFileInput.click();
+    });
+    importFileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        try {
+          const importedApps = JSON.parse(event.target.result);
+          if (Array.isArray(importedApps)) {
+            apps = importedApps;
+            saveApps();
+            renderCards();
+            alert("Settings imported successfully!");
+          } else {
+            alert("Invalid file. Please select a valid JSON file.");
+          }
+        } catch (err) {
+          alert("Failed to import: " + err.message);
+        }
+      };
+      reader.readAsText(file);
+      importFileInput.value = "";
+    });
+
+    // Export JSON
+    exportSettingsBtn.addEventListener('click', () => {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(apps, null, 2));
+      const dl = document.createElement('a');
+      dl.setAttribute("href", dataStr);
+      dl.setAttribute("download", "apps.json");
+      dl.click();
+    });
+
+    // Export HTML (full file with user changes)
+    exportHtmlBtn.addEventListener('click', () => {
+      // Get the current full HTML code and replace the defaultApps array with the current apps
+      let html = document.documentElement.outerHTML;
+      html = html.replace(
+        /const defaultApps = (\[[\s\S]*?\]);/,
+        `const defaultApps = ${JSON.stringify(apps, null, 2)};`
       );
-    }
-    function renderSection(sectionCards, sectionName, canDrag, isPinned) {
-      let html = '';
-      let total = sectionCards.length;
-      let numRows = Math.ceil((total + (editMode?1:0))/4);
-      let currentIdx = 0;
-      for(let rowNum=0; rowNum<numRows; rowNum++){
-        html += `<div class="row" data-section="${isPinned ? "pinned" : "unpinned"}">`;
-        for(let col=0; col<4; col++){
-          if(currentIdx < sectionCards.length){
-            const card = sectionCards[currentIdx];
-            html += `
-        <div class="card" draggable="true" data-idx="${card.idx}" data-section="${isPinned ? "pinned" : "unpinned"}">
-          <button class="star-btn${card.starred ? '' : ' inactive'}" tabindex="-1" title="Star">${card.starred ? '★' : '☆'}</button>
-          <span class="card-icon" data-edit="icon">${card.icon}</span>
-          <div class="card-title" data-edit="name">${card.name}</div>
-          <div class="card-desc" data-edit="desc">${card.desc}</div>
-          <a class="card-link" href="${card.link}" target="_blank" data-edit="link">Open Tool</a>
-        </div>
-            `;
-            currentIdx++;
-          } else if(editMode && (rowNum*4 + col) === sectionCards.length && !isPinned && addingNewIdx === null) {
-            html += `<div class="add-card" title="Add new app"><span>+</span></div>`;
-          }
-        }
-        html += `</div>`;
-      }
-      return html;
-    }
+      // Download the updated HTML file
+      const dataStr = "data:text/html;charset=utf-8," + encodeURIComponent(html);
+      const dl = document.createElement('a');
+      dl.setAttribute("href", dataStr);
+      dl.setAttribute("download", "index.html");
+      dl.click();
+    });
+
     function renderCards() {
-      const container = document.getElementById('cardContainer');
-      container.innerHTML = '';
-      const { pinned, unpinned } = splitCards();
-      const filteredPinned = filterCards(pinned);
-      const filteredUnpinned = filterCards(unpinned);
-
-      if(filteredPinned.length) {
-        const sectionTitle = document.createElement('div');
-        sectionTitle.className = 'section-title';
-        sectionTitle.textContent = "Pinned Apps";
-        container.appendChild(sectionTitle);
-        container.insertAdjacentHTML('beforeend', renderSection(filteredPinned, "Pinned Apps", true, true));
+      cardsContainer.innerHTML = '';
+      let filteredApps = apps;
+      if (searchValue.trim()) {
+        const sv = searchValue.trim().toLowerCase();
+        filteredApps = apps.filter(app =>
+          app.title.toLowerCase().includes(sv) ||
+          app.desc.toLowerCase().includes(sv) ||
+          app.emoji.toLowerCase().includes(sv)
+        );
       }
-
-      // Section-bar with search always at top of "Apps" section
-      const sectionBar = document.createElement('div');
-      sectionBar.className = 'section-bar';
-      sectionBar.innerHTML = `<div class="section-title">Apps</div>
-        <div class="search-box">
-          <input type="text" id="appsSearchBox" placeholder="Search Apps..." autocomplete="off" />
-        </div>`;
-      container.appendChild(sectionBar);
-
-      container.insertAdjacentHTML('beforeend', renderSection(filteredUnpinned, "Apps", true, false));
-      setTimeout(() => {
-        const searchInput = document.getElementById('appsSearchBox');
-        if(searchInput) {
-          searchInput.value = searchValue;
-          searchInput.addEventListener('input', function(e) {
-            searchValue = this.value;
-            const caret = this.selectionStart;
-            renderCards();
-            setTimeout(() => {
-              const newInput = document.getElementById('appsSearchBox');
-              if(newInput) {
-                newInput.focus();
-                newInput.setSelectionRange(caret, caret);
-              }
-            }, 0);
-          });
-        }
-      }, 0);
-      Array.from(container.querySelectorAll(".card")).forEach(el => {
-        const idx = parseInt(el.dataset.idx, 10);
-        if(editMode) {
-          el.addEventListener('click', ev => {
-            if(ev.target.classList.contains('star-btn')) return;
-            selectedCardIdx = idx;
-            showEditPanel(idx);
-            document.querySelectorAll('.card').forEach(c=>c.classList.remove('selected'));
-            el.classList.add('selected');
-          });
-        }
-        el.addEventListener('dragstart', e => {
-          dragSrcIdx = idx;
-          dragType = el.dataset.section;
-          el.classList.add('dragging');
-        });
-        el.addEventListener('dragend', e => {
-          dragSrcIdx = null;
-          dragType = null;
-          el.classList.remove('dragging');
-        });
-        el.addEventListener('dragover', e => {
-          e.preventDefault();
-          dragOverIdx = idx;
-        });
-        el.addEventListener('drop', e => {
-          e.preventDefault();
-          if(dragSrcIdx !== null && dragOverIdx !== null && dragSrcIdx !== dragOverIdx) {
-            const { pinned, unpinned } = splitCards();
-            let section = dragType === "pinned" ? pinned : unpinned;
-            let src = section.findIndex(c=>c.idx===dragSrcIdx);
-            let dst = section.findIndex(c=>c.idx===dragOverIdx);
-            if(src<0 || dst<0) return;
-            section.splice(dst, 0, section.splice(src, 1)[0]);
-            let newCards = [];
-            if(dragType === "pinned") {
-              newCards = [...section, ...unpinned];
-            } else {
-              newCards = [...pinned, ...section];
-            }
-            cards = newCards.map(card => ({...card, starred: card.starred}));
-            renderCards();
-          }
-        });
-        el.querySelector('.star-btn').onclick = function(e) {
+      let appList = filteredApps.slice();
+      cardsContainer.style.setProperty('--card-size', cardSize + 'px');
+      appList.forEach((app, idx) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.draggable = true;
+        card.dataset.idx = apps.indexOf(app);
+        card.style.setProperty('--card-size', cardSize + 'px');
+        const starBtn = document.createElement('button');
+        starBtn.className = 'star-btn' + (app.starred ? ' active' : '');
+        starBtn.innerText = app.starred ? '★' : '☆';
+        starBtn.title = app.starred ? 'Unstar' : 'Star';
+        starBtn.addEventListener('click', (e) => {
           e.stopPropagation();
-          cards[idx].starred = !cards[idx].starred;
+          app.starred = !app.starred;
+          saveApps();
           renderCards();
-        };
-        el.onclick = function(e) {
-          if(editMode) return;
-          if(e.target.classList.contains('star-btn')) return;
-          window.location.href = cards[idx].link;
-        };
-      });
-      if(editMode) {
-        Array.from(container.querySelectorAll(".add-card")).forEach(addEl => {
-          addEl.onclick = function(e) {
-            if(addingNewIdx!==null) return;
-            cards.push({icon:'',name:'',desc:'',link:'', starred:false});
-            addingNewIdx = cards.length-1;
-            renderCards();
-            setTimeout(()=>{
-              selectedCardIdx = addingNewIdx;
-              showEditPanel(selectedCardIdx);
-              document.querySelectorAll('.card').forEach((el,idx)=>{el.classList.toggle('selected',idx===selectedCardIdx)});
-            },100);
-          };
         });
+        card.appendChild(starBtn);
+        const icon = document.createElement('span');
+        icon.className = 'card-icon';
+        icon.innerText = app.emoji;
+        card.appendChild(icon);
+        const title = document.createElement('div');
+        title.className = 'card-title';
+        title.innerText = app.title;
+        card.appendChild(title);
+        const desc = document.createElement('div');
+        desc.className = 'card-desc';
+        desc.innerText = app.desc;
+        card.appendChild(desc);
+        const link = document.createElement('a');
+        link.className = 'card-link';
+        link.href = app.link;
+        link.innerText = 'Access';
+        link.target = '_blank';
+        card.appendChild(link);
+        card.addEventListener('click', (e) => {
+          if(editorMode) {
+            openEditor(apps.indexOf(app));
+          }
+        });
+        card.addEventListener('dragstart', (e) => {
+          card.classList.add('dragging');
+          e.dataTransfer.setData('text/plain', apps.indexOf(app));
+        });
+        card.addEventListener('dragend', () => {
+          card.classList.remove('dragging');
+        });
+        card.addEventListener('dragover', (e) => {
+          e.preventDefault();
+        });
+        card.addEventListener('drop', (e) => {
+          e.preventDefault();
+          const fromIdx = parseInt(e.dataTransfer.getData('text/plain'));
+          const toIdx = parseInt(card.dataset.idx);
+          if(editorMode || apps[fromIdx].starred === apps[toIdx].starred) {
+            const fromApp = apps[fromIdx];
+            apps.splice(toIdx, 0, apps.splice(fromIdx, 1)[0]);
+            saveApps();
+            renderCards();
+          }
+        });
+        cardsContainer.appendChild(card);
+      });
+      if(editorMode){
+        const addCard = document.createElement('div');
+        addCard.className = 'add-card';
+        addCard.style.setProperty('--card-size', cardSize + 'px');
+        addCard.innerHTML = '<span style="font-size:3.5rem;">+</span>';
+        addCard.title = 'Add new app';
+        addCard.onclick = () => openEditor(null);
+        cardsContainer.appendChild(addCard);
       }
     }
-    function showEditPanel(idx) {
-      const card = cards[idx];
-      document.getElementById('editIcon').value = card.icon;
-      document.getElementById('editName').value = card.name;
-      document.getElementById('editDesc').value = card.desc;
-      document.getElementById('editLink').value = card.link;
-      document.getElementById('editPanel').style.display = 'flex';
-      document.getElementById('editError').style.display = 'none';
-      document.getElementById('editError').textContent = "";
+    function saveApps() {
+      localStorage.setItem('apps', JSON.stringify(apps));
     }
-    function hideEditPanel() {
-      document.getElementById('editPanel').style.display = 'none';
-      document.querySelectorAll('.card').forEach(c=>c.classList.remove('selected'));
-      selectedCardIdx = null;
-      if(addingNewIdx!==null){
-        const newCard = cards[addingNewIdx];
-        if(!cardIsValid(newCard, addingNewIdx)) {
-          cards.splice(addingNewIdx,1);
-        }
-        addingNewIdx = null;
-        renderCards();
+    function openEditor(idx=null) {
+      editorModal.classList.add('active');
+      editorMode = true;
+      editingIdx = idx;
+      isNewApp = idx === null;
+      if(isNewApp) {
+        emojiInput.value = "";
+        titleInput.value = "";
+        descInput.value = "";
+        linkInput.value = "";
+        deleteAppBtn.style.display = "none";
+      } else {
+        const app = apps[idx];
+        emojiInput.value = app.emoji;
+        titleInput.value = app.title;
+        descInput.value = app.desc;
+        linkInput.value = app.link;
+        deleteAppBtn.style.display = "inline-block";
       }
     }
-    document.getElementById('siteLogo').onclick = function() {
-      editMode = !editMode;
-      this.classList.toggle('active', editMode);
-      document.getElementById('gapControl').style.display = editMode ? 'flex' : 'none';
-      hideEditPanel();
+    function closeEditor() {
+      editorModal.classList.remove('active');
+      editingIdx = null;
+      isNewApp = false;
+      editorForm.reset();
+    }
+    function saveEditorApp() {
+      const emoji = emojiInput.value || "🛠";
+      const title = titleInput.value || "Untitled";
+      const desc = descInput.value || "";
+      const link = linkInput.value || "#";
+      if(isNewApp) {
+        apps.push({
+          emoji, title, desc, link, starred: false
+        });
+      } else {
+        const app = apps[editingIdx];
+        app.emoji = emoji;
+        app.title = title;
+        app.desc = desc;
+        app.link = link;
+      }
+      saveApps();
       renderCards();
-    };
-
-    // Export Settings
-    document.getElementById('exportSettingsBtn').onclick = function() {
-      const data = JSON.stringify(cards, null, 2);
-      const blob = new Blob([data], {type:'application/json'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'apps-settings.json';
-      a.click();
-      URL.revokeObjectURL(a.href);
-    };
-
-    // Export HTML functionality
-    document.getElementById('exportHtmlBtn').onclick = function() {
-      let htmlContent =
-        `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Real~</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
-  <style>
-    body {margin:0;font-family:'Roboto',Arial,sans-serif;background:linear-gradient(135deg,#f8fafc,#e0e7ef 60%,#c7d2fe);min-height:100vh;}
-    .navbar {background:#1e293b;color:#fff;padding:1rem 2rem;font-size:1.5rem;letter-spacing:1px;box-shadow:0 2px 8px #0001;display:flex;align-items:center;justify-content:space-between;}
-    .logo {width:44px;height:44px;border-radius:50%;background:#6366f1;display:flex;align-items:center;justify-content:center;font-size:2.2rem;margin-right:0.3rem;}
-    .navbar .brand {font-weight:bold;font-size:1.7rem;display:flex;align-items:center;gap:0.9rem;}
-    .container {max-width:900px;margin:3rem auto 0 auto;padding:0 1rem;display:flex;flex-direction:column;gap:${document.getElementById('gapRange').value}px;}
-    .row {display:flex;gap:${document.getElementById('gapRange').value}px;margin-bottom:2rem;width:100%;flex-wrap:nowrap;}
-    .section-title {font-size:1.08rem;color:#6366f1;font-weight:bold;letter-spacing:1px;margin-bottom:0.5rem;margin-left:2px;}
-    .card {background:#fff;border-radius:16px;box-shadow:0 6px 24px #64748b30;width:220px;text-align:center;padding:2rem 1.2rem 1.5rem 1.2rem;transition:transform 0.15s,box-shadow 0.15s;position:relative;overflow:hidden;cursor:pointer;}
-    .card:hover {transform:translateY(-5px) scale(1.04);box-shadow:0 10px 32px #64748b40;background:linear-gradient(135deg,#e0e7ef 80%,#f8fafc);}
-    .star-btn {position:absolute;top:10px;right:10px;background:transparent;border:none;font-size:1.6rem;cursor:pointer;color:#f59e42;z-index:3;}
-    .star-btn.inactive { color: #d1d5db;}
-    .card-icon {font-size:2.8rem;display:block;margin-bottom:1.2rem;color:#6366f1;transition:color 0.2s;}
-    .card:hover .card-icon {color:#1e293b;}
-    .card-title {font-size:1.12rem;font-weight:700;color:#334155;margin-bottom:0.7rem;letter-spacing:0.5px;word-break:break-word;}
-    .card-desc {color:#64748b;font-size:0.98rem;margin-bottom:1.2rem;min-height:42px;word-break:break-word;}
-    .card-link {display:block;padding:0.5rem 1rem;border-radius:8px;background:#6366f1;color:#fff;text-decoration:none;font-weight:500;font-size:1rem;margin:0 auto;width:fit-content;transition:background 0.18s;}
-    .card-link:hover {background:#1e293b;}
-    @media (max-width:900px){.container{max-width:100vw;padding:0 0.4rem;}.card{width:48vw !important;min-width:150px;max-width:220px;}}
-    @media (max-width:700px){.container{flex-direction:column;align-items:center;}.row{flex-direction:column !important;}.card{width:95vw !important;margin-bottom:1rem;max-width:none;}}
-  </style>
-</head>
-<body>
-  <nav class="navbar">
-    <div class="brand"><span class="logo">🌐</span> Real~</div>
-  </nav>
-  <main>
-    <div class="container">
-      ${
-        (() => {
-          const { pinned, unpinned } = splitCards();
-          let html = "";
-          if(pinned.length) {
-            html += `<div class="section-title">Pinned Apps</div>`;
-            let total = pinned.length;
-            let numRows = Math.ceil(total / 4);
-            let currentIdx = 0;
-            for(let rowNum=0; rowNum<numRows; rowNum++){
-              html += `<div class="row">`;
-              for(let col=0; col<4; col++){
-                if(currentIdx < pinned.length){
-                  const card = pinned[currentIdx];
-                  html += `
-      <div class="card" style="width:220px;" onclick="location.href='${card.link}'">
-        <button class="star-btn${card.starred ? '' : ' inactive'}" tabindex="-1" title="Star">${card.starred ? '★' : '☆'}</button>
-        <span class="card-icon">${card.icon}</span>
-        <div class="card-title">${card.name}</div>
-        <div class="card-desc">${card.desc}</div>
-        <a class="card-link" href="${card.link}" target="_blank">Open Tool</a>
-      </div>
-                  `;
-                  currentIdx++;
-                }
-              }
-              html += `</div>`;
-            }
-          }
-          html += `<div class="section-bar"><div class="section-title">Apps</div>
-            <div class="search-box"><input type="text" placeholder="Search Apps..." disabled /></div></div>`;
-          let total = unpinned.length;
-          let numRows = Math.ceil(total / 4);
-          let currentIdx = 0;
-          for(let rowNum=0; rowNum<numRows; rowNum++){
-            html += `<div class="row">`;
-            for(let col=0; col<4; col++){
-              if(currentIdx < unpinned.length){
-                const card = unpinned[currentIdx];
-                html += `
-      <div class="card" style="width:220px;" onclick="location.href='${card.link}'">
-        <button class="star-btn${card.starred ? '' : ' inactive'}" tabindex="-1" title="Star">${card.starred ? '★' : '☆'}</button>
-        <span class="card-icon">${card.icon}</span>
-        <div class="card-title">${card.name}</div>
-        <div class="card-desc">${card.desc}</div>
-        <a class="card-link" href="${card.link}" target="_blank">Open Tool</a>
-      </div>
-                `;
-                currentIdx++;
-              }
-            }
-            html += `</div>`;
-          }
-          return html;
-        })()
+      closeEditor();
+    }
+    function deleteEditorApp() {
+      if(isNewApp) {
+        closeEditor();
+        return;
       }
-    </div>
-  </main>
-</body>
-</html>`;
-      const blob = new Blob([htmlContent], {type:'text/html'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'index.html';
-      a.click();
-      URL.revokeObjectURL(a.href);
-    };
+      apps.splice(editingIdx, 1);
+      saveApps();
+      renderCards();
+      closeEditor();
+    }
 
-    // Initial render
+    saveAppBtn.addEventListener('click', saveEditorApp);
+    deleteAppBtn.addEventListener('click', deleteEditorApp);
+    closeEditorBtn.addEventListener('click', closeEditor);
+
+    brandLogo.addEventListener('click', () => {
+      editorMode = !editorMode;
+      brandLogo.style.textDecoration = editorMode ? 'underline' : 'none';
+      renderCards();
+    });
+    editorModal.addEventListener('click', (e) => {
+      if(e.target === editorModal) closeEditor();
+    });
+    editorSearchBox.addEventListener('input', (e) => {
+      searchValue = e.target.value;
+      renderCards();
+    });
+    cardSizeSlider.addEventListener('input', (e) => {
+      cardSize = parseInt(e.target.value,10);
+      renderCards();
+    });
+    resetCardSizeBtn.addEventListener('click', () => {
+      cardSize = 220;
+      cardSizeSlider.value = 220;
+      renderCards();
+    });
     renderCards();
   </script>
 </body>
