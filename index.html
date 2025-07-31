@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Real Tools Editor</title>
+  <title>Real~ Editor</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -12,6 +12,9 @@
       background: linear-gradient(135deg, #f8fafc, #e0e7ef 60%, #c7d2fe);
       min-height: 100vh;
       user-select: none;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
     .navbar {
       background: #1e293b;
@@ -23,52 +26,110 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      position: relative;
+    }
+    .brand {
+      font-weight: bold;
+      font-size: 1.7rem;
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
     }
     .logo {
-      width: 40px;
-      height: 40px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       background: #6366f1;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2rem;
-      margin-right: 0.8rem;
+      font-size: 2.2rem;
+      margin-right: 0.3rem;
+      cursor: pointer;
+      transition: box-shadow 0.18s;
+      box-shadow: 0 2px 8px #6366f180;
     }
-    .navbar .brand {
-      font-weight: bold;
-      font-size: 1.7rem;
-      display: flex;
-      align-items: center;
+    .logo.active {
+      box-shadow: 0 0 0 4px #6366f130;
+      outline: 2px solid #6366f1;
     }
-    .navbar .edit-btn {
+    .export-settings-btn {
+      background: #fff;
+      color: #6366f1;
+      border: none;
+      padding: 0.27rem 0.8rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.89rem;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #6366f120;
+      transition: background 0.18s, color 0.18s;
+      margin-left: 0;
+      margin-right: 0.2rem;
+      position: absolute;
+      right: 2.2rem;
+      top: 1.2rem;
+      z-index: 9;
+    }
+    .export-settings-btn:hover {
       background: #6366f1;
       color: #fff;
-      border: none;
-      padding: 0.5rem 1.2rem;
-      border-radius: 8px;
-      font-weight: 500;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background 0.18s;
-    }
-    .navbar .edit-btn:hover {
-      background: #1e293b;
     }
     .container {
       max-width: 900px;
       margin: 3rem auto 0 auto;
       padding: 0 1rem;
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      flex-direction: column;
       gap: var(--gap,2rem);
+      flex: 1 1 auto;
     }
-    .card {
+    .row {
+      display: flex;
+      gap: var(--gap,2rem);
+      margin-bottom: 2rem;
+      width: 100%;
+      flex-wrap: nowrap;
+    }
+    .section-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      margin-left: 2px;
+    }
+    .section-title {
+      font-size: 1.08rem;
+      color: #6366f1;
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin: 0;
+    }
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-left: auto;
+    }
+    .search-box input[type="text"] {
+      padding: 0.26rem 0.8rem;
+      border-radius: 7px;
+      border: 1px solid #cbd5e1;
+      font-size: 1rem;
+      background: #f8fafc;
+      color: #334155;
+      width: 150px;
+      transition: border 0.2s;
+    }
+    .search-box input[type="text"]:focus {
+      border: 1.5px solid #6366f1;
+      outline: none;
+    }
+    .card, .add-card {
       background: #fff;
       border-radius: 16px;
       box-shadow: 0 6px 24px #64748b30;
-      width: var(--card-width,220px);
+      width: 220px;
       text-align: center;
       padding: 2rem 1.2rem 1.5rem 1.2rem;
       transition: transform 0.15s, box-shadow 0.15s;
@@ -76,6 +137,19 @@
       overflow: hidden;
       cursor: pointer;
       user-select: none;
+      flex: 1 1 220px;
+      max-width: 220px;
+      min-width: 150px;
+    }
+    .add-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6366f1;
+      font-size: 2.8rem;
+      border: 2px dashed #6366f1;
+      background: #f8fafc;
+      min-height: 160px;
     }
     .card:hover {
       transform: translateY(-5px) scale(1.04);
@@ -85,6 +159,18 @@
     .card.selected {
       outline: 3px solid #6366f1;
     }
+    .star-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: transparent;
+      border: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+      color: #f59e42;
+      z-index: 3;
+    }
+    .star-btn.inactive { color: #d1d5db; }
     .card-icon {
       font-size: 2.8rem;
       display: block;
@@ -103,6 +189,7 @@
       margin-bottom: 0.7rem;
       letter-spacing: 0.5px;
       cursor: pointer;
+      word-break: break-word;
     }
     .card-desc {
       color: #64748b;
@@ -110,6 +197,7 @@
       margin-bottom: 1.2rem;
       min-height: 42px;
       cursor: pointer;
+      word-break: break-word;
     }
     .card-link {
       display: block;
@@ -181,25 +269,6 @@
     .edit-panel .delete-btn:hover {
       background: #dc2626;
     }
-    .dragging {
-      opacity: 0.4;
-    }
-    .resize-handle {
-      position: absolute;
-      right: 0px;
-      bottom: 0px;
-      background: #6366f1;
-      width: 18px;
-      height: 18px;
-      border-radius: 0 0 16px 0;
-      cursor: nwse-resize;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 1.3rem;
-      z-index: 10;
-    }
     .gap-control {
       margin-right: 1rem;
       background: #fff;
@@ -215,14 +284,86 @@
       width: 60px;
       padding: 0.2rem 0.5rem;
     }
+    .footer {
+      background: transparent;
+      text-align: center;
+      padding: 2rem 0 1.5rem 0;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      margin-top: auto;
+      position: relative;
+    }
+    .footer-bottom {
+      width: 100%;
+      background: transparent;
+      text-align: center;
+      position: relative;
+      bottom: 0;
+      left: 0;
+      padding: 0.8rem 0 0.6rem 0;
+    }
+    .export-html-btn {
+      background: #e5e7eb;
+      color: #6366f1;
+      border: none;
+      padding: 0.27rem 0.8rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.89rem;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #6366f120;
+      transition: background 0.18s, color 0.18s;
+      margin: 0 auto;
+      display: inline-block;
+    }
+    .export-html-btn:hover {
+      background: #6366f1;
+      color: #fff;
+    }
+    @media (max-width: 900px) {
+      .container {
+        max-width: 100vw;
+        padding: 0 0.4rem;
+      }
+      .card, .add-card {
+        width: 48vw !important;
+        min-width: 150px;
+        max-width: 220px;
+      }
+      .search-box input[type="text"] {
+        width: 100px;
+      }
+      .export-settings-btn {
+        right: 0.7rem;
+      }
+    }
     @media (max-width: 700px) {
       .container {
         flex-direction: column;
         align-items: center;
       }
-      .card {
+      .row {
+        flex-direction: column !important;
+      }
+      .card, .add-card {
         width: 95vw !important;
         margin-bottom: 1rem;
+        max-width: none;
+      }
+      .search-box input[type="text"] {
+        width: 90px;
+      }
+      .section-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.9rem;
+      }
+      .export-settings-btn {
+        top: 0.6rem;
+        right: 0.5rem;
       }
     }
   </style>
@@ -230,20 +371,23 @@
 <body>
   <nav class="navbar">
     <div class="brand">
-      <span class="logo">🛠️</span> Real tools.
+      <span class="logo" id="siteLogo">🌐</span> Real~
     </div>
+    <button class="export-settings-btn" id="exportSettingsBtn">Export Settings</button>
     <div class="gap-control" id="gapControl" style="display:none;">
       <label for="gapRange">Spacing:</label>
       <input type="range" id="gapRange" min="0" max="64" value="32">
       <span id="gapValue">32px</span>
     </div>
-    <button class="edit-btn" id="editorToggle">Enable Edit Mode</button>
   </nav>
   <main>
-    <div class="container" id="cardContainer">
-      <!-- Cards will be rendered here -->
-    </div>
+    <div class="container" id="cardContainer"></div>
   </main>
+  <footer class="footer">
+    <div class="footer-bottom">
+      <button class="export-html-btn" id="exportHtmlBtn">Export HTML</button>
+    </div>
+  </footer>
   <div class="edit-panel" id="editPanel">
     <label>Icon (Emoji or SVG):</label>
     <input type="text" id="editIcon" maxlength="2" placeholder="e.g. 🪐">
@@ -253,220 +397,343 @@
     <textarea id="editDesc" rows="2" maxlength="120" placeholder="Description"></textarea>
     <label>Link:</label>
     <input type="text" id="editLink" placeholder="URL or path">
-    <label>Width (px):</label>
-    <input type="number" id="editWidth" min="120" max="600">
     <div class="btn-row">
       <button id="saveCardBtn">Save</button>
       <button id="deleteCardBtn" class="delete-btn">Delete</button>
       <button id="closePanelBtn">Close</button>
     </div>
+    <div style="color: #f87171; font-size:0.99rem; display:none;" id="editError"></div>
   </div>
   <script>
-    // Core card data structure
     let cards = [
-      {icon:'🪐', name:'Gravity v1', desc:'Gravity Workout', link:'gravity v1/', width:220},
-      {icon:'🏋️‍♂️', name:'Test here', desc:'Live!', link:'workout/', width:220},
-      {icon:'📊', name:'Username Finder', desc:'@username researcher.', link:'username finder/', width:220},
+      {icon:'🪐', name:'Gravity v1', desc:'Gravity Workout', link:'gravity v1/', starred:false},
+      {icon:'🏋️‍♂️', name:'Test here', desc:'Live!', link:'workout/', starred:false},
+      {icon:'📊', name:'Username Finder', desc:'@username researcher.', link:'username finder/', starred:false},
     ];
     let editMode = false;
     let selectedCardIdx = null;
     let dragSrcIdx = null;
     let dragOverIdx = null;
-    let resizingIdx = null;
-    let startWidth = null;
-    let startX = null;
-    // Render all cards
-    function renderCards() {
-      const container = document.getElementById('cardContainer');
-      container.innerHTML = '';
+    let addingNewIdx = null;
+    let dragType = null;
+    let searchValue = "";
+
+    function isDuplicateUrl(url, idx) {
+      url = url.trim();
+      return cards.some((card, i)=>i!==idx && card.link.trim()===url);
+    }
+    function cardIsValid(card, idx) {
+      if(!card.icon.trim() || !card.name.trim() || !card.desc.trim() || !card.link.trim()) return false;
+      if(isDuplicateUrl(card.link, idx)) return false;
+      return true;
+    }
+    function splitCards() {
+      const pinned = [], unpinned = [];
       cards.forEach((card, idx) => {
-        const el = document.createElement('div');
-        el.className = 'card';
-        el.style.setProperty('--card-width', card.width+'px');
-        el.draggable = editMode;
-        el.innerHTML = `
+        if (card.starred) pinned.push({...card, idx});
+        else unpinned.push({...card, idx});
+      });
+      return { pinned, unpinned };
+    }
+    function filterCards(cardsArray) {
+      if(!searchValue.trim()) return cardsArray;
+      const s = searchValue.toLowerCase();
+      return cardsArray.filter(card =>
+        card.name.toLowerCase().includes(s) ||
+        card.desc.toLowerCase().includes(s) ||
+        card.link.toLowerCase().includes(s)
+      );
+    }
+    function renderSection(sectionCards, sectionName, canDrag, isPinned) {
+      let html = '';
+      let total = sectionCards.length;
+      let numRows = Math.ceil((total + (editMode?1:0))/4);
+      let currentIdx = 0;
+      for(let rowNum=0; rowNum<numRows; rowNum++){
+        html += `<div class="row" data-section="${isPinned ? "pinned" : "unpinned"}">`;
+        for(let col=0; col<4; col++){
+          if(currentIdx < sectionCards.length){
+            const card = sectionCards[currentIdx];
+            html += `
+        <div class="card" draggable="true" data-idx="${card.idx}" data-section="${isPinned ? "pinned" : "unpinned"}">
+          <button class="star-btn${card.starred ? '' : ' inactive'}" tabindex="-1" title="Star">${card.starred ? '★' : '☆'}</button>
           <span class="card-icon" data-edit="icon">${card.icon}</span>
           <div class="card-title" data-edit="name">${card.name}</div>
           <div class="card-desc" data-edit="desc">${card.desc}</div>
           <a class="card-link" href="${card.link}" target="_blank" data-edit="link">Open Tool</a>
-          ${editMode ? '<div class="resize-handle" title="Resize">↔</div>' : ''}
-        `;
+        </div>
+            `;
+            currentIdx++;
+          } else if(editMode && (rowNum*4 + col) === sectionCards.length && !isPinned && addingNewIdx === null) {
+            html += `<div class="add-card" title="Add new app"><span>+</span></div>`;
+          }
+        }
+        html += `</div>`;
+      }
+      return html;
+    }
+    function renderCards() {
+      const container = document.getElementById('cardContainer');
+      container.innerHTML = '';
+      const { pinned, unpinned } = splitCards();
+      const filteredPinned = filterCards(pinned);
+      const filteredUnpinned = filterCards(unpinned);
+
+      if(filteredPinned.length) {
+        const sectionTitle = document.createElement('div');
+        sectionTitle.className = 'section-title';
+        sectionTitle.textContent = "Pinned Apps";
+        container.appendChild(sectionTitle);
+        container.insertAdjacentHTML('beforeend', renderSection(filteredPinned, "Pinned Apps", true, true));
+      }
+
+      // Section-bar with search always at top of "Apps" section
+      const sectionBar = document.createElement('div');
+      sectionBar.className = 'section-bar';
+      sectionBar.innerHTML = `<div class="section-title">Apps</div>
+        <div class="search-box">
+          <input type="text" id="appsSearchBox" placeholder="Search Apps..." autocomplete="off" />
+        </div>`;
+      container.appendChild(sectionBar);
+
+      container.insertAdjacentHTML('beforeend', renderSection(filteredUnpinned, "Apps", true, false));
+      setTimeout(() => {
+        const searchInput = document.getElementById('appsSearchBox');
+        if(searchInput) {
+          searchInput.value = searchValue;
+          searchInput.addEventListener('input', function(e) {
+            searchValue = this.value;
+            const caret = this.selectionStart;
+            renderCards();
+            setTimeout(() => {
+              const newInput = document.getElementById('appsSearchBox');
+              if(newInput) {
+                newInput.focus();
+                newInput.setSelectionRange(caret, caret);
+              }
+            }, 0);
+          });
+        }
+      }, 0);
+      Array.from(container.querySelectorAll(".card")).forEach(el => {
+        const idx = parseInt(el.dataset.idx, 10);
         if(editMode) {
-          el.addEventListener('dragstart', e => {
-            dragSrcIdx = idx;
-            el.classList.add('dragging');
-          });
-          el.addEventListener('dragend', e => {
-            dragSrcIdx = null;
-            el.classList.remove('dragging');
-          });
-          el.addEventListener('dragover', e => {
-            e.preventDefault();
-            dragOverIdx = idx;
-          });
-          el.addEventListener('drop', e => {
-            e.preventDefault();
-            if(dragSrcIdx !== null && dragOverIdx !== null && dragSrcIdx !== dragOverIdx) {
-              const tmp = cards[dragSrcIdx];
-              cards.splice(dragSrcIdx,1);
-              cards.splice(dragOverIdx,0,tmp);
-              renderCards();
-            }
-          });
           el.addEventListener('click', ev => {
-            if(ev.target.classList.contains('resize-handle')) return;
+            if(ev.target.classList.contains('star-btn')) return;
             selectedCardIdx = idx;
             showEditPanel(idx);
             document.querySelectorAll('.card').forEach(c=>c.classList.remove('selected'));
             el.classList.add('selected');
           });
-          // Resizing
-          const resizeHandle = el.querySelector('.resize-handle');
-          if(resizeHandle) {
-            resizeHandle.addEventListener('mousedown', e => {
-              resizingIdx = idx;
-              startWidth = card.width;
-              startX = e.clientX;
-              document.body.style.cursor = 'nwse-resize';
-              e.preventDefault();
-            });
-          }
-        } else {
-          el.onclick = ()=>location.href=card.link;
         }
-        container.appendChild(el);
+        el.addEventListener('dragstart', e => {
+          dragSrcIdx = idx;
+          dragType = el.dataset.section;
+          el.classList.add('dragging');
+        });
+        el.addEventListener('dragend', e => {
+          dragSrcIdx = null;
+          dragType = null;
+          el.classList.remove('dragging');
+        });
+        el.addEventListener('dragover', e => {
+          e.preventDefault();
+          dragOverIdx = idx;
+        });
+        el.addEventListener('drop', e => {
+          e.preventDefault();
+          if(dragSrcIdx !== null && dragOverIdx !== null && dragSrcIdx !== dragOverIdx) {
+            const { pinned, unpinned } = splitCards();
+            let section = dragType === "pinned" ? pinned : unpinned;
+            let src = section.findIndex(c=>c.idx===dragSrcIdx);
+            let dst = section.findIndex(c=>c.idx===dragOverIdx);
+            if(src<0 || dst<0) return;
+            section.splice(dst, 0, section.splice(src, 1)[0]);
+            let newCards = [];
+            if(dragType === "pinned") {
+              newCards = [...section, ...unpinned];
+            } else {
+              newCards = [...pinned, ...section];
+            }
+            cards = newCards.map(card => ({...card, starred: card.starred}));
+            renderCards();
+          }
+        });
+        el.querySelector('.star-btn').onclick = function(e) {
+          e.stopPropagation();
+          cards[idx].starred = !cards[idx].starred;
+          renderCards();
+        };
+        el.onclick = function(e) {
+          if(editMode) return;
+          if(e.target.classList.contains('star-btn')) return;
+          window.location.href = cards[idx].link;
+        };
       });
+      if(editMode) {
+        Array.from(container.querySelectorAll(".add-card")).forEach(addEl => {
+          addEl.onclick = function(e) {
+            if(addingNewIdx!==null) return;
+            cards.push({icon:'',name:'',desc:'',link:'', starred:false});
+            addingNewIdx = cards.length-1;
+            renderCards();
+            setTimeout(()=>{
+              selectedCardIdx = addingNewIdx;
+              showEditPanel(selectedCardIdx);
+              document.querySelectorAll('.card').forEach((el,idx)=>{el.classList.toggle('selected',idx===selectedCardIdx)});
+            },100);
+          };
+        });
+      }
     }
-    // Edit Panel Logic
     function showEditPanel(idx) {
       const card = cards[idx];
       document.getElementById('editIcon').value = card.icon;
       document.getElementById('editName').value = card.name;
       document.getElementById('editDesc').value = card.desc;
       document.getElementById('editLink').value = card.link;
-      document.getElementById('editWidth').value = card.width;
       document.getElementById('editPanel').style.display = 'flex';
+      document.getElementById('editError').style.display = 'none';
+      document.getElementById('editError').textContent = "";
     }
     function hideEditPanel() {
       document.getElementById('editPanel').style.display = 'none';
       document.querySelectorAll('.card').forEach(c=>c.classList.remove('selected'));
       selectedCardIdx = null;
+      if(addingNewIdx!==null){
+        const newCard = cards[addingNewIdx];
+        if(!cardIsValid(newCard, addingNewIdx)) {
+          cards.splice(addingNewIdx,1);
+        }
+        addingNewIdx = null;
+        renderCards();
+      }
     }
-    document.getElementById('editorToggle').onclick = function() {
+    document.getElementById('siteLogo').onclick = function() {
       editMode = !editMode;
-      this.textContent = editMode ? 'Disable Edit Mode' : 'Enable Edit Mode';
+      this.classList.toggle('active', editMode);
       document.getElementById('gapControl').style.display = editMode ? 'flex' : 'none';
+      hideEditPanel();
       renderCards();
     };
-    document.getElementById('saveCardBtn').onclick = function() {
-      if(selectedCardIdx !== null) {
-        cards[selectedCardIdx] = {
-          icon: document.getElementById('editIcon').value || '🔖',
-          name: document.getElementById('editName').value || 'Untitled',
-          desc: document.getElementById('editDesc').value || '',
-          link: document.getElementById('editLink').value || '#',
-          width: Math.max(120, Math.min(600, Number(document.getElementById('editWidth').value)||220))
-        };
-        renderCards();
-        hideEditPanel();
-      }
+
+    // Export Settings
+    document.getElementById('exportSettingsBtn').onclick = function() {
+      const data = JSON.stringify(cards, null, 2);
+      const blob = new Blob([data], {type:'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'apps-settings.json';
+      a.click();
+      URL.revokeObjectURL(a.href);
     };
-    document.getElementById('deleteCardBtn').onclick = function() {
-      if(selectedCardIdx !== null) {
-        cards.splice(selectedCardIdx, 1);
-        renderCards();
-        hideEditPanel();
-      }
-    };
-    document.getElementById('closePanelBtn').onclick = hideEditPanel;
-    // Gap control
-    document.getElementById('gapRange').oninput = function() {
-      document.getElementById('cardContainer').style.setProperty('--gap', this.value+'px');
-      document.getElementById('gapValue').textContent = this.value+'px';
-    };
-    // Drag & drop logic for new cards
-    document.getElementById('cardContainer').ondragover = e => editMode && e.preventDefault();
-    document.getElementById('cardContainer').ondrop = e => editMode && e.preventDefault();
-    // Global resize logic
-    document.addEventListener('mousemove', function(e) {
-      if(resizingIdx !== null) {
-        const dx = e.clientX - startX;
-        cards[resizingIdx].width = Math.max(120, Math.min(600, startWidth+dx));
-        renderCards();
-        document.querySelectorAll('.card')[resizingIdx].classList.add('selected');
-      }
-    });
-    document.addEventListener('mouseup', function(e) {
-      if(resizingIdx !== null) {
-        resizingIdx = null;
-        document.body.style.cursor = '';
-      }
-    });
-    // Add new card shortcut
-    document.addEventListener('keydown', function(e) {
-      if(editMode && e.ctrlKey && e.key === 'n') {
-        cards.push({icon:'🆕', name:'New Card', desc:'Edit me.', link:'#', width:220});
-        renderCards();
-      }
-    });
-    // Export as HTML
-    function exportHTML() {
-      let htmlContent = 
+
+    // Export HTML functionality
+    document.getElementById('exportHtmlBtn').onclick = function() {
+      let htmlContent =
         `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Real Tools</title>
+  <title>Real~</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
   <style>
     body {margin:0;font-family:'Roboto',Arial,sans-serif;background:linear-gradient(135deg,#f8fafc,#e0e7ef 60%,#c7d2fe);min-height:100vh;}
     .navbar {background:#1e293b;color:#fff;padding:1rem 2rem;font-size:1.5rem;letter-spacing:1px;box-shadow:0 2px 8px #0001;display:flex;align-items:center;justify-content:space-between;}
-    .logo {width:40px;height:40px;border-radius:50%;background:#6366f1;display:flex;align-items:center;justify-content:center;font-size:2rem;margin-right:0.8rem;}
-    .navbar .brand {font-weight:bold;font-size:1.7rem;display:flex;align-items:center;}
-    .container {max-width:900px;margin:3rem auto 0 auto;padding:0 1rem;display:flex;flex-wrap:wrap;justify-content:center;gap:${document.getElementById('gapRange').value}px;}
+    .logo {width:44px;height:44px;border-radius:50%;background:#6366f1;display:flex;align-items:center;justify-content:center;font-size:2.2rem;margin-right:0.3rem;}
+    .navbar .brand {font-weight:bold;font-size:1.7rem;display:flex;align-items:center;gap:0.9rem;}
+    .container {max-width:900px;margin:3rem auto 0 auto;padding:0 1rem;display:flex;flex-direction:column;gap:${document.getElementById('gapRange').value}px;}
+    .row {display:flex;gap:${document.getElementById('gapRange').value}px;margin-bottom:2rem;width:100%;flex-wrap:nowrap;}
+    .section-title {font-size:1.08rem;color:#6366f1;font-weight:bold;letter-spacing:1px;margin-bottom:0.5rem;margin-left:2px;}
     .card {background:#fff;border-radius:16px;box-shadow:0 6px 24px #64748b30;width:220px;text-align:center;padding:2rem 1.2rem 1.5rem 1.2rem;transition:transform 0.15s,box-shadow 0.15s;position:relative;overflow:hidden;cursor:pointer;}
     .card:hover {transform:translateY(-5px) scale(1.04);box-shadow:0 10px 32px #64748b40;background:linear-gradient(135deg,#e0e7ef 80%,#f8fafc);}
+    .star-btn {position:absolute;top:10px;right:10px;background:transparent;border:none;font-size:1.6rem;cursor:pointer;color:#f59e42;z-index:3;}
+    .star-btn.inactive { color: #d1d5db;}
     .card-icon {font-size:2.8rem;display:block;margin-bottom:1.2rem;color:#6366f1;transition:color 0.2s;}
     .card:hover .card-icon {color:#1e293b;}
-    .card-title {font-size:1.12rem;font-weight:700;color:#334155;margin-bottom:0.7rem;letter-spacing:0.5px;}
-    .card-desc {color:#64748b;font-size:0.98rem;margin-bottom:1.2rem;min-height:42px;}
+    .card-title {font-size:1.12rem;font-weight:700;color:#334155;margin-bottom:0.7rem;letter-spacing:0.5px;word-break:break-word;}
+    .card-desc {color:#64748b;font-size:0.98rem;margin-bottom:1.2rem;min-height:42px;word-break:break-word;}
     .card-link {display:block;padding:0.5rem 1rem;border-radius:8px;background:#6366f1;color:#fff;text-decoration:none;font-weight:500;font-size:1rem;margin:0 auto;width:fit-content;transition:background 0.18s;}
     .card-link:hover {background:#1e293b;}
-    @media (max-width:700px){.container{flex-direction:column;align-items:center;}.card{width:95vw;margin-bottom:1rem;}}
+    @media (max-width:900px){.container{max-width:100vw;padding:0 0.4rem;}.card{width:48vw !important;min-width:150px;max-width:220px;}}
+    @media (max-width:700px){.container{flex-direction:column;align-items:center;}.row{flex-direction:column !important;}.card{width:95vw !important;margin-bottom:1rem;max-width:none;}}
   </style>
 </head>
 <body>
   <nav class="navbar">
-    <div class="brand"><span class="logo">🛠️</span> Real tools.</div>
+    <div class="brand"><span class="logo">🌐</span> Real~</div>
   </nav>
   <main>
     <div class="container">
-      ${cards.map(card=>`
-      <div class="card" style="width:${card.width}px;" onclick="location.href='${card.link}'">
+      ${
+        (() => {
+          const { pinned, unpinned } = splitCards();
+          let html = "";
+          if(pinned.length) {
+            html += `<div class="section-title">Pinned Apps</div>`;
+            let total = pinned.length;
+            let numRows = Math.ceil(total / 4);
+            let currentIdx = 0;
+            for(let rowNum=0; rowNum<numRows; rowNum++){
+              html += `<div class="row">`;
+              for(let col=0; col<4; col++){
+                if(currentIdx < pinned.length){
+                  const card = pinned[currentIdx];
+                  html += `
+      <div class="card" style="width:220px;" onclick="location.href='${card.link}'">
+        <button class="star-btn${card.starred ? '' : ' inactive'}" tabindex="-1" title="Star">${card.starred ? '★' : '☆'}</button>
         <span class="card-icon">${card.icon}</span>
         <div class="card-title">${card.name}</div>
         <div class="card-desc">${card.desc}</div>
         <a class="card-link" href="${card.link}" target="_blank">Open Tool</a>
       </div>
-      `).join('')}
+                  `;
+                  currentIdx++;
+                }
+              }
+              html += `</div>`;
+            }
+          }
+          html += `<div class="section-bar"><div class="section-title">Apps</div>
+            <div class="search-box"><input type="text" placeholder="Search Apps..." disabled /></div></div>`;
+          let total = unpinned.length;
+          let numRows = Math.ceil(total / 4);
+          let currentIdx = 0;
+          for(let rowNum=0; rowNum<numRows; rowNum++){
+            html += `<div class="row">`;
+            for(let col=0; col<4; col++){
+              if(currentIdx < unpinned.length){
+                const card = unpinned[currentIdx];
+                html += `
+      <div class="card" style="width:220px;" onclick="location.href='${card.link}'">
+        <button class="star-btn${card.starred ? '' : ' inactive'}" tabindex="-1" title="Star">${card.starred ? '★' : '☆'}</button>
+        <span class="card-icon">${card.icon}</span>
+        <div class="card-title">${card.name}</div>
+        <div class="card-desc">${card.desc}</div>
+        <a class="card-link" href="${card.link}" target="_blank">Open Tool</a>
+      </div>
+                `;
+                currentIdx++;
+              }
+            }
+            html += `</div>`;
+          }
+          return html;
+        })()
+      }
     </div>
   </main>
 </body>
 </html>`;
-      const win = window.open('', '_blank');
-      win.document.write(htmlContent);
-      win.document.close();
-    }
-    // Add export button
-    (() => {
-      const btn = document.createElement('button');
-      btn.textContent = 'Export HTML';
-      btn.className = 'edit-btn';
-      btn.style.marginLeft = '1rem';
-      btn.onclick = exportHTML;
-      document.querySelector('.navbar').appendChild(btn);
-    })();
+      const blob = new Blob([htmlContent], {type:'text/html'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'index.html';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    };
+
     // Initial render
     renderCards();
   </script>
