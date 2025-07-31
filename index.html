@@ -7,7 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* Default theme */
       --bg: linear-gradient(135deg, #f8fafc, #e0e7ef 60%, #c7d2fe);
       --card-bg: #fff;
       --text: #334155;
@@ -24,29 +23,33 @@
       --drag-btn: #e0e7ef;
       --brand-bg: #6366f1;
       --brand-fg: #fff;
+      --header-title: #fff;
+      --header-shadow: 0 2px 8px #6366f122;
     }
     [data-theme="terminal"] {
-      --bg: #121b13;
-      --card-bg: #121b13;
-      --text: #39ff14;
-      --secondary: #39ff14;
-      --accent: #00b300;
+      --bg: #101b13;
+      --card-bg: #101b13;
+      --text: #38ff38;
+      --secondary: #38ff38;
+      --accent: #00c400;
       --border: #003c1c;
-      --pin: #39ff14;
+      --pin: #38ff38;
       --shadow: 0 4px 18px #003c1c22;
       --icon-bg: #003c1c;
       --search-bg: #003c1c;
-      --search-fg: #39ff14;
-      --desc-fg: #39ff14;
+      --search-fg: #38ff38;
+      --desc-fg: #38ff38;
       --setting-btn: #003c1c;
       --drag-btn: #003c1c;
-      --brand-bg: #00b300;
-      --brand-fg: #39ff14;
+      --brand-bg: #191f1a;
+      --brand-fg: #38ff38;
+      --header-title: #38ff38;
+      --header-shadow: 0 2px 8px #003c1c22;
     }
     [data-theme="sunset"] {
       --bg: linear-gradient(135deg, #fa8716 0%, #ffb46c 60%, #ffecb3 100%);
       --card-bg: #fff5e0;
-      --text: #d35400;
+      --text: #a34c12;
       --secondary: #e67e22;
       --accent: #fa8716;
       --border: #ffd6a0;
@@ -60,24 +63,28 @@
       --drag-btn: #ffd6a0;
       --brand-bg: #fa8716;
       --brand-fg: #fff;
+      --header-title: #fff;
+      --header-shadow: 0 2px 8px #fa871622;
     }
     [data-theme="dark"] {
-      --bg: #1a1a1d;
-      --card-bg: #222326;
-      --text: #f3f4f6;
-      --secondary: #b7b7b7;
+      --bg: #0a1733; /* Deep royal navy blue */
+      --card-bg: #fff;
+      --text: #fff;
+      --secondary: #fff;
       --accent: #6366f1;
       --border: #23272f;
       --pin: #6366f1;
       --shadow: 0 4px 18px #18181b44;
-      --icon-bg: #23272f;
+      --icon-bg: #ecefff; /* keep white boxes */
       --search-bg: #23272f;
-      --search-fg: #f3f4f6;
-      --desc-fg: #b7b7b7;
+      --search-fg: #fff;
+      --desc-fg: #fff;
       --setting-btn: #23272f;
       --drag-btn: #23272f;
-      --brand-bg: #6366f1;
+      --brand-bg: #8B5C2A; /* Metal brown header */
       --brand-fg: #fff;
+      --header-title: #fff;
+      --header-shadow: 0 2px 8px #18181b44;
     }
     html, body {
       height: 100%;
@@ -96,7 +103,7 @@
       padding: 0.75rem 1.8rem;
       font-size: 1.5rem;
       letter-spacing: 1px;
-      box-shadow: 0 2px 8px #0001;
+      box-shadow: var(--header-shadow);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -122,7 +129,8 @@
       font-size: 1.32rem;
       letter-spacing: 1px;
       margin-left: 0.1rem;
-      color: var(--brand-fg);
+      color: var(--header-title);
+      text-shadow: 0 2px 8px #0001;
     }
     .navbar .right-box {
       display: flex;
@@ -133,11 +141,9 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      margin-top: 1.1em;
-      margin-bottom: 0.7em;
       max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
+      margin: 1.1em auto 0 auto;
+      position: relative;
     }
     .setting-btn {
       background: var(--setting-btn);
@@ -153,46 +159,16 @@
       height: 32px;
       width: 32px;
       justify-content: center;
+      position: relative;
+      left: 0;
+      top: 0;
+      z-index: 3;
     }
     .setting-btn svg {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       color: var(--accent);
       vertical-align: middle;
-    }
-    .search-box {
-      position: relative;
-      min-width: 80px;
-      max-width: 110px;
-      width: 110px;
-      margin-left: 0.1rem;
-      display: flex;
-      align-items: center;
-    }
-    .search-input {
-      width: 100%;
-      padding: 0.26em 0.8em 0.26em 1.7em;
-      border-radius: 6px;
-      border: none;
-      font-size: 0.94em;
-      background: var(--search-bg);
-      color: var(--search-fg);
-      outline: none;
-      box-shadow: 0 1px 4px #0001;
-      transition: box-shadow 0.17s, background 0.17s;
-      height: 26px;
-      margin-left: 0;
-      display: block;
-    }
-    .search-box svg {
-      position: absolute;
-      left: 7px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--secondary);
-      width: 14px;
-      height: 14px;
-      pointer-events: none;
     }
     .theme-group {
       display: flex;
@@ -247,6 +223,66 @@
       background: var(--accent);
       color: var(--brand-fg);
     }
+    .search-box {
+      position: relative;
+      min-width: 180px;
+      max-width: 220px;
+      width: 220px;
+      margin-left: 0.1rem;
+      margin-top: 1.2em;
+      display: flex;
+      align-items: center;
+    }
+    .search-input {
+      width: 100%;
+      padding: 0.26em 0.8em 0.26em 1.7em;
+      border-radius: 6px;
+      border: none;
+      font-size: 0.97em;
+      background: var(--search-bg);
+      color: var(--search-fg);
+      outline: none;
+      box-shadow: 0 1px 4px #0001;
+      transition: box-shadow 0.17s, background 0.17s;
+      height: 28px;
+      margin-left: 0;
+      display: block;
+    }
+    .search-box svg {
+      position: absolute;
+      left: 7px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--secondary);
+      width: 14px;
+      height: 14px;
+      pointer-events: none;
+    }
+    .save-export-btn {
+      position: absolute;
+      top: -36px;
+      right: 0;
+      z-index: 4;
+      background: var(--setting-btn);
+      border-radius: 8px;
+      border: none;
+      box-shadow: 0 2px 10px #0002;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.16s;
+    }
+    .save-export-btn svg {
+      width: 24px;
+      height: 24px;
+      color: var(--accent);
+    }
+    .save-export-btn:hover {
+      background: var(--accent);
+    }
     .container {
       max-width: 800px;
       margin: 0.5rem auto 0 auto;
@@ -256,6 +292,7 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 0.6rem;
       transition: all 0.3s;
+      position: relative;
     }
     .container.list-view {
       display: flex;
@@ -568,10 +605,9 @@
   <nav class="navbar">
     <span class="brand-logo">
       <span class="logo-svg">
-        <!-- Simple 'R' logo SVG -->
         <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
           <rect x="0" y="0" width="32" height="32" rx="8" fill="var(--brand-bg)"/>
-          <text x="16" y="21.5" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--brand-fg)" font-family="Roboto, Arial">R</text>
+          <text x="16" y="21.5" text-anchor="middle" font-size="18" font-weight="bold" fill="var(--header-title)" font-family="Roboto, Arial">R</text>
         </svg>
       </span>
       <span class="brand">Real</span>
@@ -587,12 +623,8 @@
   </nav>
   <div class="search-row">
     <button class="setting-btn" id="settingBtn" title="Export/Import">
-      <svg viewBox="0 0 22 22"><path d="M11 4v14m0 0l-4-4m4 4l4-4" stroke="var(--accent)" stroke-width="2" fill="none"/><circle cx="11" cy="11" r="10" stroke="var(--accent)" stroke-width="2" fill="none"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M17 3H7a2 2 0 0 0-2 2v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5a2 2 0 0 0-2-2z" fill="var(--accent)"/><rect x="9" y="15" width="6" height="2" fill="var(--brand-fg)"/><rect x="9" y="7" width="6" height="6" fill="var(--brand-fg)"/></svg>
     </button>
-    <div class="search-box">
-      <svg viewBox="0 0 20 20"><circle cx="9" cy="9" r="7" stroke="var(--secondary)" stroke-width="2" fill="none"/><line x1="14.5" y1="14.5" x2="18" y2="18" stroke="var(--secondary)" stroke-width="2"/></svg>
-      <input type="text" class="search-input" id="searchInput" placeholder="Search tool...">
-    </div>
     <div class="explorer-btn-group">
       <button class="explorer-btn active" id="gridViewBtn" title="Grid View">
         <svg width="18" height="18" viewBox="0 0 18 18"><rect x="2" y="2" width="5" height="5" rx="1" fill="var(--accent)"/><rect x="11" y="2" width="5" height="5" rx="1" fill="var(--accent)"/><rect x="2" y="11" width="5" height="5" rx="1" fill="var(--accent)"/><rect x="11" y="11" width="5" height="5" rx="1" fill="var(--accent)"/></svg>
@@ -601,6 +633,13 @@
         <svg width="18" height="18" viewBox="0 0 18 18"><rect x="2" y="3" width="14" height="3" rx="1.5" fill="var(--accent)"/><rect x="2" y="12" width="14" height="3" rx="1.5" fill="var(--accent)"/></svg>
       </button>
     </div>
+    <div class="search-box">
+      <svg viewBox="0 0 20 20"><circle cx="9" cy="9" r="7" stroke="var(--secondary)" stroke-width="2" fill="none"/><line x1="14.5" y1="14.5" x2="18" y2="18" stroke="var(--secondary)" stroke-width="2"/></svg>
+      <input type="text" class="search-input" id="searchInput" placeholder="Search tool...">
+    </div>
+    <button class="save-export-btn" id="exportBtn" title="Export settings">
+      <svg viewBox="0 0 24 24"><path d="M17 3H7a2 2 0 0 0-2 2v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5a2 2 0 0 0-2-2z" fill="var(--accent)"/><rect x="9" y="15" width="6" height="2" fill="var(--brand-fg)"/><rect x="9" y="7" width="6" height="6" fill="var(--brand-fg)"/></svg>
+    </button>
   </div>
   <main>
     <div class="container" id="cardsContainer">
@@ -619,7 +658,6 @@
         localStorage.setItem('real_theme', btn.getAttribute('data-theme'));
       };
     });
-    // Load theme from storage
     (() => {
       let saved = localStorage.getItem('real_theme');
       if (saved) {
@@ -657,14 +695,12 @@
         img: ""
       }
     ];
-
     let draggingIdx = null;
     let currentSearch = "";
 
     function handleEdit(idx, field) {
       let value = '';
       if (field === "icon") {
-        // File upload dialog for icon
         let input = document.createElement('input');
         input.type = 'file';
         input.accept = 'image/*';
@@ -701,17 +737,14 @@
         }
       }
     }
-
     function handlePin(idx) {
       cards[idx].pin = !cards[idx].pin;
       saveCards();
       renderCards();
     }
-
     function saveCards() {
       localStorage.setItem('real_cards', JSON.stringify(cards));
     }
-
     const container = document.getElementById('cardsContainer');
     function renderCards() {
       container.innerHTML = "";
@@ -720,7 +753,6 @@
         if (!filter) return true;
         return (card.title.toLowerCase().includes(filter) || card.desc.toLowerCase().includes(filter));
       });
-      // Pinned first
       filtered.sort((a, b) => (b.pin ? 1 : 0) - (a.pin ? 1 : 0));
       if (container.classList.contains("list-view")) {
         container.style.overflowX = "hidden";
@@ -780,7 +812,6 @@
 
         // Card content
         if (container.classList.contains("list-view")) {
-          // List view
           const iconSpan = document.createElement("span");
           iconSpan.className = "card-icon";
           if (card.img) {
@@ -797,13 +828,11 @@
 
           const contentDiv = document.createElement("div");
           contentDiv.className = "card-content";
-
           const titleDiv = document.createElement("div");
           titleDiv.className = "card-title";
           titleDiv.textContent = card.title;
           titleDiv.onmouseover = () => titleDiv.querySelector('.edit-icon').style.display = "inline-block";
           titleDiv.onmouseout = () => titleDiv.querySelector('.edit-icon').style.display = "none";
-          titleDiv.style.position = "relative";
           const editTitleIcon = document.createElement("span");
           editTitleIcon.className = "edit-icon";
           editTitleIcon.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 10.5V12h1.5l8.1-8.1a1.06 1.06 0 0 0-1.5-1.5L2 10.5z" fill="var(--accent)"/></svg>`;
@@ -815,7 +844,6 @@
           descDiv.textContent = card.desc;
           descDiv.onmouseover = () => descDiv.querySelector('.edit-icon').style.display = "inline-block";
           descDiv.onmouseout = () => descDiv.querySelector('.edit-icon').style.display = "none";
-          descDiv.style.position = "relative";
           const editDescIcon = document.createElement("span");
           editDescIcon.className = "edit-icon";
           editDescIcon.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 10.5V12h1.5l8.1-8.1a1.06 1.06 0 0 0-1.5-1.5L2 10.5z" fill="var(--accent)"/></svg>`;
@@ -824,7 +852,6 @@
 
           contentDiv.appendChild(titleDiv);
           contentDiv.appendChild(descDiv);
-
           cardDiv.appendChild(contentDiv);
 
           const linkA = document.createElement("a");
@@ -835,7 +862,6 @@
           cardDiv.appendChild(linkA);
 
         } else {
-          // Grid view
           const iconSpan = document.createElement("span");
           iconSpan.className = "card-icon";
           if (card.img) {
@@ -855,28 +881,23 @@
           titleDiv.textContent = card.title;
           titleDiv.onmouseover = () => titleDiv.querySelector('.edit-icon').style.display = "inline-block";
           titleDiv.onmouseout = () => titleDiv.querySelector('.edit-icon').style.display = "none";
-          titleDiv.style.position = "relative";
           const editTitleIcon = document.createElement("span");
           editTitleIcon.className = "edit-icon";
           editTitleIcon.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 10.5V12h1.5l8.1-8.1a1.06 1.06 0 0 0-1.5-1.5L2 10.5z" fill="var(--accent)"/></svg>`;
           editTitleIcon.onclick = e => { e.stopPropagation(); handleEdit(idx, "title"); };
           titleDiv.appendChild(editTitleIcon);
-
           cardDiv.appendChild(titleDiv);
 
-          // Up to 3 lines of description in grid view
           const descDiv = document.createElement("div");
           descDiv.className = "card-desc";
           descDiv.textContent = card.desc.split('\n').slice(0, 3).join('\n');
           descDiv.onmouseover = () => descDiv.querySelector('.edit-icon').style.display = "inline-block";
           descDiv.onmouseout = () => descDiv.querySelector('.edit-icon').style.display = "none";
-          descDiv.style.position = "relative";
           const editDescIcon = document.createElement("span");
           editDescIcon.className = "edit-icon";
           editDescIcon.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 10.5V12h1.5l8.1-8.1a1.06 1.06 0 0 0-1.5-1.5L2 10.5z" fill="var(--accent)"/></svg>`;
           editDescIcon.onclick = e => { e.stopPropagation(); handleEdit(idx, "desc"); };
           descDiv.appendChild(editDescIcon);
-
           cardDiv.appendChild(descDiv);
 
           const linkA = document.createElement("a");
@@ -886,11 +907,9 @@
           linkA.setAttribute("tabindex", "0");
           cardDiv.appendChild(linkA);
         }
-
         container.appendChild(cardDiv);
       });
     }
-
     document.getElementById('gridViewBtn').onclick = function() {
       container.classList.remove("list-view");
       this.classList.add("active");
@@ -903,13 +922,19 @@
       document.getElementById('gridViewBtn').classList.remove("active");
       renderCards();
     };
-
     document.getElementById('searchInput').addEventListener("input", function() {
       currentSearch = this.value;
       renderCards();
     });
-
-    // Export/Import
+    // Export button floating at top right
+    document.getElementById('exportBtn').onclick = function() {
+      let blob = new Blob([JSON.stringify(cards)], {type: "application/json"});
+      let a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "real_settings.json";
+      a.click();
+    };
+    // Old export/import for settings icon
     document.getElementById('settingBtn').onclick = function() {
       let menu = document.createElement('div');
       menu.style.position = 'absolute';
@@ -922,26 +947,14 @@
       menu.style.padding = '4px 8px';
       menu.style.zIndex = 99;
       menu.style.fontSize = '0.92em';
-
       menu.innerHTML = `
-        <button style="background:var(--accent);color:var(--brand-fg);border:none;border-radius:5px;margin:3px 0;padding:5px 11px;cursor:pointer;width:100%;" id="exportBtn">Export</button>
         <button style="background:var(--setting-btn);color:var(--accent);border:none;border-radius:5px;margin:3px 0;padding:5px 11px;cursor:pointer;width:100%;" id="importBtn">Import</button>
       `;
       document.body.appendChild(menu);
-
-      document.getElementById('exportBtn').onclick = function() {
-        let blob = new Blob([JSON.stringify(cards)], {type: "application/json"});
-        let a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "real_settings.json";
-        a.click();
-        document.body.removeChild(menu);
-      };
       document.getElementById('importBtn').onclick = function() {
         document.getElementById('importFile').click();
         document.body.removeChild(menu);
       };
-
       document.addEventListener('click', function hideMenu(e) {
         if (!menu.contains(e.target) && e.target !== document.getElementById('settingBtn')) {
           document.body.removeChild(menu);
@@ -949,7 +962,6 @@
         }
       });
     };
-
     document.getElementById('importFile').onchange = function(e) {
       let file = e.target.files[0];
       if (!file) return;
@@ -967,7 +979,6 @@
       reader.readAsText(file);
       document.getElementById('importFile').value = "";
     };
-
     renderCards();
   </script>
 </body>
