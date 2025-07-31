@@ -6,12 +6,31 @@
   <title>Real~</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary-color: #a8ff78;
+      --secondary-color: #78ffd6;
+      --dark-bg: #1a1a1a;
+      --light-bg: #2b2b2b;
+      --text-color: #f0f0f0;
+      --grey-text: #aaa;
+      --gradient-title: linear-gradient(90deg, #a8ff78, #78ffd6);
+    }
+
     body {
       margin: 0;
       font-family: 'Roboto', Arial, sans-serif;
       background: linear-gradient(135deg, #f8fafc, #e0e7ef 60%, #c7d2fe);
       min-height: 100vh;
+      color: #334155;
+      transition: background 0.2s, color 0.2s;
     }
+
+    html[data-theme="dark"] body {
+      background: var(--dark-bg) !important;
+      color: var(--text-color);
+      transition: background 0.2s, color 0.2s;
+    }
+
     .navbar {
       background: #1e293b;
       color: #fff;
@@ -28,6 +47,38 @@
       font-weight: bold;
       font-size: 1.7rem;
       cursor: pointer;
+      background: none;
+      color: inherit;
+      transition: color 0.2s;
+    }
+    html[data-theme="dark"] .navbar {
+      background: var(--light-bg);
+      color: var(--text-color);
+    }
+    html[data-theme="dark"] .navbar .brand {
+      background: var(--gradient-title);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+    }
+    .theme-toggle-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.7rem;
+      cursor: pointer;
+      margin-left: 1em;
+      border-radius: 8px;
+      padding: 0.2em 0.5em;
+      transition: background 0.18s;
+      outline: none;
+    }
+    .theme-toggle-btn:hover {
+      background: #2226;
+    }
+    html[data-theme="dark"] .theme-toggle-btn {
+      color: var(--primary-color);
     }
     .container {
       width: 100%;
@@ -86,6 +137,11 @@
       box-shadow: 0 10px 32px #64748b40;
       background: linear-gradient(135deg, #e0e7ef 80%, #f8fafc);
     }
+    html[data-theme="dark"] .card {
+      background: var(--light-bg);
+      color: var(--text-color);
+      box-shadow: 0 6px 24px #0008;
+    }
     .card-icon {
       font-size: 2.8rem;
       display: block;
@@ -96,18 +152,34 @@
     .card:hover .card-icon {
       color: #1e293b;
     }
+    html[data-theme="dark"] .card-icon {
+      color: var(--primary-color);
+    }
     .card-title {
       font-size: 1.12rem;
       font-weight: 700;
       color: #334155;
       margin-bottom: 0.7rem;
       letter-spacing: 0.5px;
+      transition: color 0.18s;
+    }
+    html[data-theme="dark"] .card-title {
+      color: var(--primary-color);
+      background: var(--gradient-title);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
     }
     .card-desc {
       color: #64748b;
       font-size: 0.98rem;
       margin-bottom: 1.2rem;
       min-height: 42px;
+      transition: color 0.18s;
+    }
+    html[data-theme="dark"] .card-desc {
+      color: var(--text-color);
     }
     .card-link {
       display: block;
@@ -125,6 +197,10 @@
     .card-link:hover {
       background: #1e293b;
     }
+    html[data-theme="dark"] .card-link {
+      background: var(--primary-color);
+      color: var(--dark-bg);
+    }
     .star-btn {
       position: absolute;
       top: 8px;
@@ -141,6 +217,9 @@
     .star-btn.active {
       opacity: 1;
       color: #22c55e;
+    }
+    html[data-theme="dark"] .star-btn {
+      color: var(--primary-color);
     }
     .card.dragging {
       opacity: 0.5;
@@ -176,11 +255,24 @@
       gap: 1rem;
       position: relative;
     }
+    html[data-theme="dark"] .editor-box {
+      background: var(--light-bg);
+      color: var(--text-color);
+      box-shadow: 0 6px 24px #000a;
+    }
     .editor-box label {
       font-size: 1rem;
       color: #334155;
       font-weight: 500;
       margin-bottom: 0.25rem;
+    }
+    html[data-theme="dark"] .editor-box label {
+      color: var(--primary-color);
+      background: var(--gradient-title);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
     }
     .editor-box input, .editor-box textarea {
       font-size: 1.1rem;
@@ -189,6 +281,12 @@
       border: 1px solid #cbd5e1;
       margin-bottom: 0.5rem;
       background: #f1f5f9;
+      color: #334155;
+    }
+    html[data-theme="dark"] .editor-box input, html[data-theme="dark"] .editor-box textarea {
+      background: var(--dark-bg);
+      color: var(--text-color);
+      border: 1px solid var(--primary-color);
     }
     .editor-box textarea {
       resize: vertical;
@@ -212,6 +310,10 @@
       font-weight: 500;
       transition: background 0.18s;
     }
+    html[data-theme="dark"] .editor-actions button {
+      background: var(--primary-color);
+      color: var(--dark-bg);
+    }
     .editor-actions .delete-btn {
       background: #ef4444;
     }
@@ -220,6 +322,18 @@
     }
     .editor-actions .save-btn {
       background: #22c55e;
+    }
+    html[data-theme="dark"] .editor-actions .delete-btn {
+      background: #ef4444;
+      color: #fff;
+    }
+    html[data-theme="dark"] .editor-actions .close-btn {
+      background: #64748b;
+      color: #fff;
+    }
+    html[data-theme="dark"] .editor-actions .save-btn {
+      background: var(--primary-color);
+      color: var(--dark-bg);
     }
     .export-actions {
       margin: 1rem 0;
@@ -238,6 +352,10 @@
       font-weight: 500;
       transition: background 0.18s;
     }
+    html[data-theme="dark"] .export-actions button {
+      background: var(--primary-color);
+      color: var(--dark-bg);
+    }
     .editor-search-box {
       margin: 0 auto 1rem auto;
       width: 340px;
@@ -249,6 +367,11 @@
       color: #334155;
       display: block;
       box-sizing: border-box;
+    }
+    html[data-theme="dark"] .editor-search-box {
+      background: var(--dark-bg);
+      color: var(--text-color);
+      border: 1.8px solid var(--primary-color);
     }
     .add-card {
       background: #f1f5f9;
@@ -272,6 +395,11 @@
     .add-card:hover {
       background: #c7d2fe;
     }
+    html[data-theme="dark"] .add-card {
+      background: var(--dark-bg);
+      border: 2px dashed var(--primary-color);
+      color: var(--primary-color);
+    }
     .card-size-slider-wrap {
       width: 350px;
       margin: 0 auto 1.2rem auto;
@@ -291,11 +419,25 @@
       accent-color: #6366f1;
       height: 2.2em;
     }
+    html[data-theme="dark"] .card-size-slider-label {
+      color: var(--primary-color);
+      background: var(--gradient-title);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+    }
+    html[data-theme="dark"] .card-size-slider {
+      accent-color: var(--primary-color);
+    }
   </style>
 </head>
 <body>
   <nav class="navbar" id="navbar">
     <span class="brand" id="brand-logo">Real~</span>
+    <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle dark/light mode" aria-label="Toggle theme">
+      🌗
+    </button>
   </nav>
   <main>
     <div class="export-actions">
@@ -339,6 +481,25 @@
     </form>
   </div>
   <script>
+    // Theme Toggle Logic
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    function setTheme(isDark) {
+      if (isDark) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggleBtn.textContent = "🌗";
+        localStorage.setItem("theme", "dark");
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+        themeToggleBtn.textContent = "🌞";
+        localStorage.setItem("theme", "light");
+      }
+    }
+    // Load theme on startup
+    setTheme(localStorage.getItem("theme") === "dark");
+    themeToggleBtn.onclick = function () {
+      setTheme(!(document.documentElement.getAttribute('data-theme') === "dark"));
+    };
+
     const defaultApps = [
       {
         "emoji": "📊",
@@ -440,7 +601,7 @@
       );
       // Download the updated HTML file
       const dataStr = "data:text/html;charset=utf-8," + encodeURIComponent(html);
-      const dl = document.createElement('a');
+      const dl = document.createElement("a");
       dl.setAttribute("href", dataStr);
       dl.setAttribute("download", "index.html");
       dl.click();
