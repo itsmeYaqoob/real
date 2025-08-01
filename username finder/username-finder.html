@@ -1,0 +1,22 @@
+<!-- No visual changes, only add postMessage handler at the end of script -->
+<!-- (Paste this at the end of the existing <script> in your username-finder.html, before </script>) -->
+
+<script>
+  // Listen for postMessage from text-finder
+  window.addEventListener('message', function(event){
+    if(event.data && event.data.type==='add-username-variant'){
+      let variantWord = event.data.value;
+      // Prevent duplicates
+      if (!variants.some(v => v.variant === variantWord)) {
+        variants.push({
+          id: makeId(),
+          variant: variantWord,
+          direction: "end",
+          pinned: false
+        });
+        saveToBrowser();
+        renderVariants();
+      }
+    }
+  });
+</script>

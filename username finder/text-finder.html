@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Text Finder</title>
+  <style>
+    :root {
+      --primary-color: #a8ff78;
+      --secondary-color: #78ffd6;
+      --dark-bg: #1a1a1a;
+      --light-bg: #2b2b2b;
+      --text-color: #f0f0f0;
+      --border: #2b2b2b;
+      --username-cell-radius: 10px;
+      --username-cell-bg: #232323;
+      --username-cell-hover: #2b3d2b;
+      --username-cell-active: #1a5a1a;
+    }
+    body, html {
+      margin: 0;
+      padding: 0;
+      background: var(--dark-bg);
+      color: var(--text-color);
+      font-family: system-ui, sans-serif;
+      height: 100%;
+      width: 100vw;
+      overflow: hidden;
+    }
+    .main-container {
+      padding: 16px 10px 10px 10px;
+      height: 100vh;
+      box-sizing: border-box;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .username-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      width: 100%;
+      flex: 1 1 auto;
+      align-items: stretch;
+      /* No scrollbars inside grid */
+      overflow: hidden;
+    }
+    .username-cell {
+      background: var(--username-cell-bg);
+      border-radius: var(--username-cell-radius);
+      color: var(--primary-color);
+      text-align: center;
+      font-size: 1.18em;
+      font-weight: 600;
+      padding: 14px 6px;
+      margin: 0;
+      outline: none;
+      border: 2px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: background 0.13s, border 0.13s;
+      box-shadow: 0 2px 8px #0005;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .username-cell:hover, .username-cell:focus {
+      background: var(--username-cell-hover);
+      border-color: var(--primary-color);
+      color: #fff;
+    }
+    .username-cell:active {
+      background: var(--username-cell-active);
+      color: #fff;
+    }
+    .pagination-bar {
+      text-align: center;
+      margin-top: 8px;
+      margin-bottom: 4px;
+      user-select: none;
+    }
+    .pagination-bar button {
+      margin: 0 2px;
+      padding: 4px 12px;
+      background: var(--light-bg);
+      color: var(--primary-color);
+      border: 1.2px solid var(--primary-color);
+      border-radius: 7px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.12s, color 0.12s;
+    }
+    .pagination-bar button.active,
+    .pagination-bar button:hover {
+      background: var(--primary-color);
+      color: var(--dark-bg);
+    }
+    .pagination-bar span {
+      color: var(--text-color);
+      margin: 0 0.7em;
+    }
+    @media (max-width: 700px) {
+      .username-grid { grid-template-columns: repeat(2, 1fr);}
+    }
+    @media (max-width: 500px) {
+      .username-grid { grid-template-columns: repeat(1, 1fr);}
+    }
+  </style>
+</head>
+<body>
+  <div class="main-container">
+    <div id="usernameGrid" class="username-grid"></div>
+    <div id="paginationBar" class="pagination-bar"></div>
+  </div>
+  <script>
+    // Helper to get usernames (simulate from backend or textarea, you should replace this with your actual list)
+    // For demo, let's use a sample list
+    let usernames = [];
+    // You can replace this with your input/logic
+    for(let i=1;i<=103;i++) usernames.push('user_' + i);
+
+    // Paging
+    let wordsPerRow = 4;
+    let maxRows = 4;
+    let wordsPerPage = wordsPerRow * maxRows;
+    let currentPage = 1;
+    let totalPages = 1;
+
+    function fitRowsToScreen() {
+      // Calculate how many rows fit in available space
+      const grid = document.getElementById('usernameGrid');
+      const main = document.querySelector('.main-container');
+      if (!grid || !main) return;
+      // Subtract space for pagination, padding
+      let availHeight = main.clientHeight - 48 - 30 - 18; // grid - pagination - top/bottom
+      let cellHeight = 56; // approx (padding + font + borders)
+      maxRows = Math.floor(availHeight / cellHeight);
+      if (maxRows < 1) maxRows = 1;
+      wordsPerPage = wordsPerRow * maxRows;
+      totalPages = Math.ceil(usernames.length / wordsPerPage);
+      if (currentPage > totalPages) currentPage = totalPages;
+      if (currentPage < 1) currentPage = 1;
+    }
+
+    function renderGrid() {
+      fitRowsToScreen();
+      const grid = document.getElementById('usernameGrid');
+      grid.innerHTML = '';
+      let start = (currentPage - 1) * wordsPerPage;
+      let end = Math.min(start + wordsPerPage, usernames.length);
+      let pageWords = usernames.slice(start, end);
+      pageWords.forEach(word => {
+        const cell = document.createElement('button');
+        cell.className = 'username-cell';
+        cell.textContent = word;
+        cell.title = word;
+        cell.onclick = () => {
+          // Send to Username Finder via postMessage
+          window.parent.postMessage({type:'add-username-variant', value: word}, '*');
+        };
+        grid.appendChild(cell);
+      });
+      // Fill empty cells for grid alignment
+      let empty = wordsPerPage - pageWords.length;
+      for(let i=0;i<empty;i++){
+        const cell = document.createElement('div');
+        cell.className = 'username-cell';
+        cell.style.opacity = '0';
+        cell.style.pointerEvents = 'none';
+        grid.appendChild(cell);
+      }
+    }
+
+    function renderPagination() {
+      fitRowsToScreen();
+      const bar = document.getElementById('paginationBar');
+      if (totalPages <= 1) {
+        bar.innerHTML = '';
+        return;
+      }
+      let html = '';
+      html += `<button ${currentPage===1?'disabled':''} onclick="gotoPage(${currentPage-1})">&lt; Prev</button>`;
+      // Show up to 5 page numbers
+      let minPage = Math.max(1, currentPage-2);
+      let maxPage = Math.min(totalPages, minPage+4);
+      minPage = Math.max(1, maxPage-4);
+      for(let p=minPage;p<=maxPage;p++){
+        html += `<button ${p===currentPage?'class="active"':''} onclick="gotoPage(${p})">${p}</button>`;
+      }
+      html += `<button ${currentPage===totalPages?'disabled':''} onclick="gotoPage(${currentPage+1})">Next &gt;</button>`;
+      html += `<span>Page ${currentPage} of ${totalPages}</span>`;
+      bar.innerHTML = html;
+    }
+
+    function gotoPage(n) {
+      if (n<1 || n>totalPages) return;
+      currentPage = n;
+      renderGrid();
+      renderPagination();
+    }
+
+    // Listen for resize events and adjust grid
+    window.addEventListener('resize', () => {
+      renderGrid();
+      renderPagination();
+    });
+
+    // Init
+    renderGrid();
+    renderPagination();
+
+    // If you have a real source of usernames, replace the usernames array, then call renderGrid() and renderPagination().
+    // Example: usernames = [...]; renderGrid(); renderPagination();
+
+  </script>
+</body>
+</html>

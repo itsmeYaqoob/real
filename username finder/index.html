@@ -1,0 +1,73 @@
+<!-- Split view splitter improved for smoother drag + iframe postMessage ready (minimal changes) -->
+<!-- Only show the JS/CSS needed for the splitter and layout, not your entire index.html for brevity -->
+
+<style>
+  /* Add/replace your splitter style */
+  .splitter-bar {
+    width: 8px;
+    background: #333;
+    cursor: col-resize;
+    z-index: 1000;
+    user-select: none;
+    transition: background 0.12s;
+  }
+  .splitter-bar.dragging {
+    background: #a8ff78;
+  }
+  .split-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .split-pane {
+    flex: 1 1 0%;
+    min-width: 160px;
+    height: 100vh;
+    overflow: hidden;
+    transition: flex-basis 0.13s;
+  }
+</style>
+<div class="split-container">
+  <div id="pane1" class="split-pane" style="flex-basis: 50vw;">
+    <iframe src="username finder/username-finder.html" style="border:none;width:100%;height:100%;"></iframe>
+  </div>
+  <div id="splitter" class="splitter-bar"></div>
+  <div id="pane2" class="split-pane" style="flex-basis: 50vw;">
+    <iframe src="text-finder.html" style="border:none;width:100%;height:100%;"></iframe>
+  </div>
+</div>
+<script>
+  // Smoother splitter logic
+  const splitter = document.getElementById('splitter');
+  const pane1 = document.getElementById('pane1');
+  const pane2 = document.getElementById('pane2');
+  let dragging = false;
+  let startX = 0;
+  let startWidth = 0;
+  splitter.addEventListener('mousedown', function(e){
+    dragging = true;
+    startX = e.clientX;
+    startWidth = pane1.offsetWidth;
+    splitter.classList.add('dragging');
+    document.body.style.cursor = 'col-resize';
+  });
+  window.addEventListener('mousemove', function(e){
+    if(!dragging) return;
+    let dx = e.clientX - startX;
+    let newWidth = startWidth + dx;
+    let min = 160;
+    let max = window.innerWidth - min;
+    if(newWidth<min) newWidth=min;
+    if(newWidth>max) newWidth=max;
+    pane1.style.flexBasis = `${newWidth}px`;
+    pane2.style.flexBasis = `calc(100vw - ${newWidth}px - 8px)`;
+  });
+  window.addEventListener('mouseup', function(){
+    if(dragging){
+      dragging = false;
+      splitter.classList.remove('dragging');
+      document.body.style.cursor = '';
+    }
+  });
+</script>
