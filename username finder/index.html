@@ -691,7 +691,15 @@ Enter to submit all at once."
       if (v) {
         v.variant = newWord;
         saveToBrowser();
-        renderVariants();
+        // Instead of re-rendering the whole list, only update this row's preview and link button.
+        // Find the row and update its preview and url.
+        const row = document.querySelector(`.variant-row[data-vid="${id}"]`);
+        if (row) {
+          // Update preview box
+          const previewBox = row.querySelector('.preview-box');
+          if (previewBox) previewBox.textContent = getUsername(v);
+          // Update url button (no change needed unless url shown)
+        }
       }
     }
     function togglePin(id) {
@@ -739,6 +747,7 @@ Enter to submit all at once."
         row.className = "variant-row";
         row.setAttribute("draggable", "true");
         row.dataset.idx = idx;
+        row.dataset.vid = v.id;
 
         // Drag & drop
         row.addEventListener("dragstart", function(e) {
