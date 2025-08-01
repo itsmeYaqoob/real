@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Text Finder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #23272e;
+      color: #e0ffe0;
+      font-family: system-ui, Arial, sans-serif;
+      margin: 0; padding: 0;
+    }
+    .main {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 2em 1em 1.5em 1em;
+      display: flex;
+      flex-direction: column;
+      gap: 1.3em;
+    }
+    .title {
+      font-size: 2em;
+      font-weight: bold;
+      letter-spacing: .03em;
+      color: #a8ff78;
+      margin-bottom: .2em;
+      margin-top: .1em;
+    }
+    .input-section {
+      display: flex;
+      flex-direction: column;
+      gap: .7em;
+    }
+    .input-section textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 14px;
+      border-radius: 10px;
+      border: 1.5px solid #444;
+      background: #262626;
+      color: #eee;
+      font-size: 1.11em;
+      resize: vertical;
+      font-family: inherit;
+      box-sizing: border-box;
+    }
+    .input-row {
+      display: flex;
+      gap: 1em;
+      align-items: center;
+    }
+    .input-row input[type=text] {
+      font-size: 1.1em;
+      padding: 9px 16px;
+      border-radius: 7px;
+      border: 1.5px solid #444;
+      background: #181818;
+      color: #fff;
+      font-weight: 500;
+      width: 210px;
+      outline: none;
+      box-sizing: border-box;
+    }
+    .find-btn {
+      background: #a8ff78;
+      color: #23272e;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.08em;
+      font-weight: bold;
+      padding: 9px 22px;
+      cursor: pointer;
+      transition: background .17s, color .14s;
+    }
+    .find-btn:hover {
+      background: #78ffd6;
+      color: #191919;
+    }
+    .results-section {
+      margin-top: .8em;
+    }
+    .columns {
+      display: flex;
+      gap: 1.2em;
+      justify-content: flex-start;
+    }
+    .col {
+      flex: 1 1 0;
+      min-width: 90px;
+      background: #28313b;
+      border-radius: 7px;
+      padding: 0.7em 0.8em;
+      color: #fff;
+      font-size: 1.03em;
+      margin-bottom: .4em;
+      box-sizing: border-box;
+      word-break: break-all;
+      max-height: 50vh;
+      overflow-y: auto;
+    }
+    .col-title {
+      color: #a8ff78;
+      font-size: 1.04em;
+      margin-bottom: 0.3em;
+      font-weight: 600;
+    }
+    @media (max-width: 900px) {
+      .main { max-width: 99vw; }
+      .columns { flex-direction: column; gap: 0.3em; }
+    }
+  </style>
+</head>
+<body>
+  <div class="main">
+    <div class="title">Text Finder</div>
+    <div class="input-section">
+      <textarea id="pageText" placeholder="Paste your entire page or text here"></textarea>
+      <div class="input-row">
+        <input type="text" id="searchWord" placeholder="Type word or symbol (e.g. @)">
+        <button class="find-btn" id="findBtn">Extract</button>
+      </div>
+    </div>
+    <div class="results-section" id="resultsSection" style="display:none;">
+      <div class="columns" id="resultsColumns"></div>
+    </div>
+  </div>
+  <script>
+    function extractWords(text, search) {
+      if(!search) return [];
+      let regex = new RegExp(`[\\w@#\\-_.]+`, "g");
+      let words = text.match(regex) || [];
+      search = search.toLowerCase();
+      return words.filter(w => w.toLowerCase().includes(search));
+    }
+    function chunkArray(arr, n) {
+      let chunkLen = Math.ceil(arr.length / n);
+      let out = [];
+      for(let i=0; i<n; ++i)
+        out.push(arr.slice(i*chunkLen, (i+1)*chunkLen));
+      return out;
+    }
+    document.getElementById('findBtn').onclick = function() {
+      let text = document.getElementById('pageText').value;
+      let search = document.getElementById('searchWord').value.trim();
+      let words = extractWords(text, search);
+      let columns = chunkArray(words, 4);
+      let resultsColumns = document.getElementById('resultsColumns');
+      resultsColumns.innerHTML = '';
+      columns.forEach((col, idx) => {
+        let div = document.createElement('div');
+        div.className = 'col';
+        div.innerHTML = `<div class="col-title">Column ${idx+1}</div>`;
+        div.innerHTML += col.map(w => `<div>${w}</div>`).join('');
+        resultsColumns.appendChild(div);
+      });
+      document.getElementById('resultsSection').style.display = words.length ? '' : 'none';
+    }
+  </script>
+</body>
+</html>
